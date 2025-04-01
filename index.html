@@ -85,53 +85,54 @@
     </style>
 </head>
 <body>
-     
 
   <!-- Embutir áudio do YouTube com o tempo inicial configurado -->
   <iframe id="youtube-audio" width="0" height="0" 
-  src="https://www.youtube.com/embed/IPLGZ07AjrY?autoplay=1&start=39&loop=1&playlist=IPLGZ07AjrY" 
-  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+    src="https://www.youtube.com/embed/IPLGZ07AjrY?autoplay=1&start=39&loop=1&playlist=IPLGZ07AjrY" 
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
   </iframe>
-        <div class="container">
-        <table class="tabela">
-            <tr>
-                <th>Usuário</th>
-                <th>Horas</th>
-            </tr>
-            <tr>
-                <td>Vlad</td>
-                <td>⏰ 34 horas, 06 minutos, 00 segundos</td>
-            </tr>
-            <tr>
-                <td>Melãoo</td>
-                <td>⏰ 25 horas, 38 minutos, 00 segundos</td>
-            </tr>
-            <tr>
-                <td>Sabrina</td>
-                <td>⏰ 11 horas, 29 minutos, 21 segundos</td>
-            </tr>
-            <tr>
-                <td>Bastos ☮</td>
-                <td>⏰ 38 minutos, 6 segundos</td>
-            </tr>
-            <tr>
-                <td>Secrets</td>
-                <td>⏰ 35 minutos, 12 segundos</td>
-            </tr>
-        </table>
-        <div class="botoes">
-            <a href="premiacoes.html" class="botao-premiacoes" target="_blank">Ranking</a>
-        </div>
+
+  <div class="container">
+    <table class="tabela">
+        <tr>
+            <th>Usuário</th>
+            <th>Horas</th>
+        </tr>
+        <tr>
+            <td>Vlad</td>
+            <td>⏰ 34 horas, 06 minutos, 00 segundos</td>
+        </tr>
+        <tr>
+            <td>Melãoo</td>
+            <td>⏰ 25 horas, 38 minutos, 00 segundos</td>
+        </tr>
+        <tr>
+            <td>Sabrina</td>
+            <td>⏰ 11 horas, 29 minutos, 21 segundos</td>
+        </tr>
+        <tr>
+            <td>Bastos ☮</td>
+            <td>⏰ 38 minutos, 6 segundos</td>
+        </tr>
+        <tr>
+            <td>Secrets</td>
+            <td>⏰ 35 minutos, 12 segundos</td>
+        </tr>
+    </table>
+    <div class="botoes">
+        <a href="premiacoes.html" class="botao-premiacoes" target="_blank">Ranking</a>
     </div>
-    <script>
-        function setVolume() {
-            let iframe = document.getElementById("youtube-audio");
-            const player = new YT.Player(iframe);
-            player.setVolume(20); // Ajusta o volume para 20% (pode ajustar de acordo)
-            iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[20]}', '*');
-        }
-    
-        setTimeout(setVolume, 2000); // Ajusta o volume após 2 segundos (tempo para o player carregar)
-    </script>    
+  </div>
+
+  <script>
+      // Script para ajustar o volume após o carregamento
+      function setVolume() {
+          let iframe = document.getElementById("youtube-audio");
+          iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[20]}', '*'); // Ajusta o volume para 20%
+      }
+      
+      setTimeout(setVolume, 2000); // Ajusta o volume após 2 segundos
+  </script>
+
 </body>
 </html>
