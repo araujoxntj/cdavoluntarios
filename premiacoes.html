@@ -9,7 +9,6 @@
     <style>
         body {
             background: url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
-            background-color: #0a0a0a;
             background-size: cover;
             font-family: 'Comfortaa', sans-serif;
             color: white;
@@ -21,15 +20,20 @@
             min-height: 100vh;
             margin: 0;
             transition: background 0.3s, color 0.3s;
+            border: 5px solid #ffbb00; /* Adicionando a borda */
+            border-radius: 15px; /* Bordas arredondadas */
         }
+
         .light-mode {
-            background: #ffffff;
+            background-color: #ffffff;
             color: #000000;
+            border: 5px solid #ffbb00; /* Borda também no modo claro */
         }
 
         .dark-mode {
-            background: #121212;
+            background-color: #121212;
             color: #ffffff;
+            border: 5px solid #ffbb00; /* Borda também no modo escuro */
         }
 
        .toggle-icon {
@@ -189,6 +193,7 @@
                 padding: 15px;
             }
         }
+        
 
     </style>
 </head>
@@ -205,7 +210,7 @@
             <h2>🥇 1° Lugar - Vlad</h2>
             <p>⏰ 34 horas, 06 minutos, 00 segundos</p>
             <div class="premiacoes">
-                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 
+                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 Diamantes
             </div>
         </div>
 
@@ -213,7 +218,7 @@
             <h2>🥈 2° Lugar - Melãoo</h2>
             <p>⏰ 25 horas, 38 minutos, 00 segundos</p>
             <div class="premiacoes">
-                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 
+                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 Diamantes
             </div>
         </div>
 
@@ -221,7 +226,7 @@
             <h2>🥉 3° Lugar - Sabrina</h2>
             <p>⏰ 11 horas, 29 minutos, 21 segundos</p>
             <div class="premiacoes">
-                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 
+                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 Parabens
             </div>
         </div>
 
@@ -229,7 +234,7 @@
             <h2>🏆 4° Lugar - Bastos ☮</h2>
             <p>⏰ 38 minutos, 6 segundos</p>
             <div class="premiacoes">
-                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 
+                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 Parabens
             </div>
         </div>
 
@@ -237,7 +242,7 @@
             <h2>🏅 5° Lugar - Secrets</h2>
             <p>⏰ 35 minutos, 12 segundos</p>
             <div class="premiacoes">
-                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 
+                <span class="setas">→</span><span class="setas">→</span><span class="setas">→</span>🎁 Parabens
             </div>
         </div>
 
@@ -287,18 +292,21 @@
     function toggleMode() {
             const body = document.body;
             const button = document.querySelector(".toggle-icon");
+            
             body.classList.toggle("dark-mode");
-            body.classList.toggle("light.mode");
+            body.classList.toggle("light-mode"); // Corrigido erro no nome da classe
+
             const isDarkMode = body.classList.contains("dark-mode");
             localStorage.setItem("theme", isDarkMode ? "dark" : "light");
             button.textContent = isDarkMode ? "🌙" : "☀️";
         }
 
-        //Mantém o modo selecionado mesmo após recarregar a página
+                // Mantém o tema ao recarregar a página
         window.onload = function() {
             const savedTheme = localStorage.getItem("theme");
             const body = document.body;
             const button = document.querySelector(".toggle-icon");
+
             if (savedTheme === "light") {
                 body.classList.add("light-mode");
                 button.textContent = "☀️";               

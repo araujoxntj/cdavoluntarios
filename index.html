@@ -7,9 +7,8 @@
     <link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body {
+            body {
             background: url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
-            background-color: #0a0a0a;
             background-size: cover;
             font-family: 'Comfortaa', sans-serif;
             color: white;
@@ -18,19 +17,24 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            margin: 0;
             transition: background 0.3s, color 0.3s;
+            border: 5px solid #ffbb00; /* Adicionando a borda */
+            border-radius: 15px; /* Bordas arredondadas */
         }
+
         .light-mode {
-            background: #ffffff;
+            background-color: #ffffff;
             color: #000000;
+            border: 5px solid #ffbb00; /* Borda também no modo claro */
         }
 
         .dark-mode {
-            background: #121212;
+            background-color: #121212;
             color: #ffffff;
+            border: 5px solid #ffbb00; /* Borda também no modo escuro */
         }
-
        .toggle-icon {
             position: fixed;
             top: 10px;
@@ -156,18 +160,21 @@
         function toggleMode() {
             const body = document.body;
             const button = document.querySelector(".toggle-icon");
+            
             body.classList.toggle("dark-mode");
-            body.classList.toggle("light.mode");
+            body.classList.toggle("light-mode"); // Corrigido erro no nome da classe
+
             const isDarkMode = body.classList.contains("dark-mode");
             localStorage.setItem("theme", isDarkMode ? "dark" : "light");
             button.textContent = isDarkMode ? "🌙" : "☀️";
         }
 
-        //Mantém o modo selecionado mesmo após recarregar a página
+                // Mantém o tema ao recarregar a página
         window.onload = function() {
             const savedTheme = localStorage.getItem("theme");
             const body = document.body;
             const button = document.querySelector(".toggle-icon");
+
             if (savedTheme === "light") {
                 body.classList.add("light-mode");
                 button.textContent = "☀️";               

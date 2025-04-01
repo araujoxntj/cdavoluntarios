@@ -9,10 +9,8 @@
     <style>
         body {
             background: url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
-            background-color: #0a0a0a;
             background-size: cover;
             font-family: 'Comfortaa', sans-serif;
-            transition: background 0.3s, color 0.3s;
             color: white;
             text-align: center;
             padding: 20px;
@@ -21,16 +19,21 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            transition: background 0.3s, color 0.3s;
+            border: 5px solid #ffbb00; /* Adicionando a borda */
+            border-radius: 15px; /* Bordas arredondadas */
         }
 
         .light-mode {
-            background: #ffffff;
+            background-color: #ffffff;
             color: #000000;
+            border: 5px solid #ffbb00; /* Borda também no modo claro */
         }
 
         .dark-mode {
-            background: #121212;
+            background-color: #121212;
             color: #ffffff;
+            border: 5px solid #ffbb00; /* Borda também no modo escuro */
         }
 
         .toggle-icon {
@@ -178,11 +181,11 @@
     <div class="container">
         <p>
            <h1><strong class="negrito-dourado">Equipe de Voluntários</strong> <br></h1>
-            Eu Razor, gostaría de deixar um sincero agradecimento a todos vocês, pelo empenho, dedicação e compromisso que têm demonstrado ao realizar cada atividade dentro do projeto, na qual tenho orgulho em dizer que um dia fiz parte e hoje atuo como gestor. 
-            De ante mão, deixo bem claro que tudo que vocês precisarem podem contar não só comigo, mas com toda a equipe do Operacional
-            Todos vocês fizeram um belo trabalho nesse começo de novos aprendizados e melhorias dentro do projeto, desde a inserção do ponto 
-            Eu não havia comentado, mas após todo final de mês (quando a contagem reinicia), haverá uma premiação para aqueles que se empenharam 
-            Todavia, a premiação não é baseada somente na quantidade de horas do ranking, e sim em todos os critérios avaliativos, sendo eles: chamados, interesse em ajudar, presença no servidor e em Rps. 
+            Eu Razor, gostaría de deixar um sincero agradecimento a todos vocês, pelo empenho, dedicação e compromisso que têm demonstrado ao realizar cada atividade dentro do projeto, na qual tenho orgulho em dizer que um dia fiz parte e hoje atuo como coordenador. 
+            De ante mão, deixo bem claro que tudo que vocês precisarem podem contar não só comigo, mas com toda a equipe do Operacional.
+            Todos vocês fizeram um belo trabalho nesse começo de novos aprendizados e melhorias dentro do projeto, desde a inserção do ponto e até o presente momento. 
+            Eu não havia comentado, mas após todo final de mês (quando a contagem reinicia), haverá uma premiação para aqueles que se empenharam.
+            Todavia, a premiação não é baseada somente na quantidade de horas do ranking, e sim em todos os critérios avaliativos, sendo eles: chamados, interesse em ajudar, presença no servidor e em Rps e a proatividade na realização das funções solicitadas.
         </p>
         <p class="agradecimento">
             <span class="negrito-dourado" style="color: #fca400; font-weight: bold;">Atenciosamente</span> <br><br>
@@ -212,24 +215,28 @@
         function toggleMode() {
             const body = document.body;
             const button = document.querySelector(".toggle-icon");
+            
             body.classList.toggle("dark-mode");
-            body.classList.toggle("light.mode");
+            body.classList.toggle("light-mode"); // Corrigido erro no nome da classe
+
             const isDarkMode = body.classList.contains("dark-mode");
             localStorage.setItem("theme", isDarkMode ? "dark" : "light");
             button.textContent = isDarkMode ? "🌙" : "☀️";
         }
 
+        // Mantém o tema ao recarregar a página
         window.onload = function() {
-        const savedTheme = localStorage.getItem("theme");
-        const body = document.body;
-        const button = document.querySelector(".toggle-icon");
-        if (savedTheme === "light") {
-            body.classList.add("light-mode");
-            button.textContent = "☀️";               
-        } else {
-            body.classList.add("dark-mode");
-            button.textContent = "🌙";               
-        }
+            const savedTheme = localStorage.getItem("theme");
+            const body = document.body;
+            const button = document.querySelector(".toggle-icon");
+
+            if (savedTheme === "light") {
+                body.classList.add("light-mode");
+                button.textContent = "☀️";               
+            } else {
+                body.classList.add("dark-mode");
+                button.textContent = "🌙";               
+            }
         
         let timeLeft = 120;
         const timerMessage = document.getElementById("timer-message");
