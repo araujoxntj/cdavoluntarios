@@ -52,7 +52,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             font-size: 1.2em;
-            display: none;
+            display: block;
         }
 
         .container {
@@ -209,14 +209,11 @@
                 const countdown = setInterval(() => {
                     timeLeft--;
 
-                    if (timeLeft <= 40) {
-                        timerMessage.style.display = "block";
-                        timerMessage.textContent = `Você será redirecionado em ${timeLeft} segundos...`;
-                    }
-
-                    if(timeLeft <= 0) {
+                    if (timeLeft <= 0) {
                         clearInterval(countdown);
-                        window.location.href = "https://cidadealtarp.com";
+                        window.location.href = "https://cidadealtarp.com"; 
+                    } else {
+                        timerMessage.textContent = `Você será redirecionado em ${timeLeft} segundos...`;
                     }
                 }, 1000);
             })
