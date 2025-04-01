@@ -178,6 +178,15 @@
                 body.classList.add("dark-mode");
                 button.textContent = "🌙";               
             }
+            //Define o tema antes do carregamento da página para evitar o delay
+            (function(){
+                const savedTheme = localStorage.getItem("theme");
+                if (savedTheme) {
+                    document.documentElement.classList.add(savedTheme === "dark" ? "dark-mode" : "light-mode");
+                } else {
+                    document.documentElement.classList.add("dark-mode");
+                }
+            })
         };
     </script>
 </body>
