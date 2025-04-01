@@ -129,6 +129,9 @@
     <script>
         function setVolume() {
             let iframe = document.getElementById("youtube-audio");
+            iframe.onload = function() {
+        // Desmutar o áudio após o carregamento
+        iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
             iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[20]}', '*');
         }
     
