@@ -171,10 +171,12 @@
             const savedTheme = localStorage.getItem("theme");
             const body = document.body;
             const button = document.querySelector(".toggle-icon");
-            if (savedTheme) {
-                body.classList.remove("light-mode", "dark-mode");
-                body.classList.add(savedTheme === "dark" ? "dark-mode" : "light-mode");
-                button.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+            if (savedTheme === "light") {
+                body.classList.add("light-mode");
+                button.textContent = "☀️";               
+            } else {
+                body.classList.add("dark-mode");
+                button.textContent = "🌙";               
             }
         };
     </script>
