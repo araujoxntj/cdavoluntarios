@@ -12,6 +12,7 @@
             background-color: #0a0a0a;
             background-size: cover;
             font-family: 'Comfortaa', sans-serif;
+            transition: background 0.3s, color 0.3s;
             color: white;
             text-align: center;
             padding: 20px;
@@ -20,6 +21,27 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+        }
+
+        .light-mode {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .dark-mode {
+            background: #121212;
+            color: #ffffff;
+        }
+
+       .toggle-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: inherit;
         }
 
         .container {
@@ -93,7 +115,8 @@
 
     </style>
 </head>
-<body>
+<body class="light-mode">
+    <button class="toggle-icon" onclick="toggleMode()">☀️</button>
     <!-- Embutir áudio sem controles visíveis -->
     <iframe id="youtube-audio" width="0" height="0" 
     src="https://www.youtube.com/embed/f9_ebuB1VLM?autoplay=1&loop=1&playlist=f9_ebuB1VLM&enablejsapi=1" 
@@ -133,6 +156,27 @@
         window.open("fivem://connect/vddag5", "_blank");
         }
         setTimeout(setVolume, 2000); // Ajusta o volume após 2 segundos (tempo para o player carregar)
+        function toggleMode() {
+            const body = document.body;
+            const button = document.querySelector(".toggle-icon");
+            body.classList.toggle("dark-mode");
+            body.classList.toggle("light.mode");
+            const isDarkMode = body.classList.contains("dark-mode");
+            localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+            button.textContent = isDarkMode ? "🌙" : "☀️";
+        }
+
+        //Mantém o modo selecionado mesmo após recarregar a página
+        window.onload = function() {
+            const savedTheme = localStorage.getItem("theme");
+            const body = document.body;
+            const button = document.querySelector(".toggle-icon");
+            if (savedTheme) {
+                body.classList.remove("light-mode", "dark-mode");
+                body.classList.add(savedTheme === "dark" ? "dark-mode" : "light-mode");
+                button.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+            }
+        };
     </script>
 </body>
 </html>
