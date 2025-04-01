@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cidade Alta - Voluntários</title>
+    <link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
+            background-color: #0a0a0a;
+            background-size: cover;
+            font-family: 'Comfortaa', sans-serif;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://cidadealtarp.com/favicon.svg') no-repeat center center;
+            background-size: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.2;
+            z-index: -1;
+        }
+        .container {
+            width: 65%;
+            background: rgba(20, 20, 20, 0.95);
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 187, 0, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        h1 {
+            color: #ffbb00;
+            font-size: 2.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #ffbb00;
+        }
+        .tabela {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .tabela th, .tabela td {
+            padding: 20px;
+            border-bottom: 3px solid #ffbb00;
+            font-size: 1.2em;
+        }
+        .tabela th {
+            background: linear-gradient(90deg, #cc8800, #ffbb00);
+            color: black;
+            font-size: 1.4em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px black;
+        }
+        .tabela tr {
+            background: rgba(30, 30, 30, 0.9);
+            transition: all 0.3s ease-in-out;
+        }
+        .tabela tr:hover {
+            background: rgba(255, 187, 0, 0.4);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+        .tabela td:first-child {
+            font-weight: bold;
+            color: #ffbb00;
+            font-size: 1.3em;
+            text-shadow: 0 0 10px #ffbb00;
+        }
+        .equipe-voluntarios {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ffbb00;
+            text-shadow: 0 0 10px #ffbb00;
+        }
+        .equipe-voluntarios img {
+            width: 40px;
+            height: 40px;
+        }
+        .botao-planilha {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            color: black;
+            background: #ffbb00;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ffbb00;
+            transition: all 0.3s ease-in-out;
+        }
+        .botao-planilha:hover {
+            background: #cc8800;
+            box-shadow: 0 0 15px #cc8800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="equipe-voluntarios">
+            <img src="https://cidadealtarp.com/favicon.svg" alt="Ícone Voluntários">
+            <h2>Cidade Alta © </h2>
+        </div>
+        <div class="equipe-voluntarios">
+            <span>Equipe Voluntários </span>
+        </div>
+        <table class="tabela">
+            <tr>
+                <th>Posição</th>
+                <th>Usuário</th>
+                <th>Horas</th>
+            </tr>
+            <tr>
+                <td>🏆 TOP 1</td>
+                <td>Vlad</td>
+                <td>34 horas, 06 minutos, 00 segundos</td>
+            </tr>
+            <tr>
+                <td>🥈 TOP 2</td>
+                <td>Melãoo</td>
+                <td>23 horas, 29 minutos, 49 segundos</td>
+            </tr>
+            <tr>
+                <td>🥉 TOP 3</td>
+                <td>Sabrina</td>
+                <td>11 horas, 29 minutos, 21 segundos</td>
+            </tr>
+            <tr>
+                <td>🔹 TOP 4</td>
+                <td>Bastos ☮</td>
+                <td>38 minutos, 6 segundos</td>
+            </tr>
+            <tr>
+                <td>🔹 TOP 5</td>
+                <td>Secrets</td>
+                <td>35 minutos, 12 segundos</td>
+            </tr>
+        </table>
+        <a href="https://docs.google.com/spreadsheets/d/1qULY53JfwYeBOqnMfSgXcBPoSnEmaC7bpySEd9Yrx-U/edit?gid=1183797006#gid=1183797006" class="botao-planilha" target="_blank">Conferir planilha</a>
+        <p style="margin-top: 40px; font-size: 1.1em; color: #a5a4a0;">Copyright © 2025, Cidade Alta, All rights reserved.</p>
+    </div>
+</body>
+</html>
