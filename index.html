@@ -86,8 +86,8 @@
 </head>
 <body>
 
-  <!-- Div para o player do YouTube -->
-  <div id="player"></div>
+  <!-- Div para o player do YouTube (ocultado) -->
+  <div id="player" style="display:none;"></div>
 
   <div class="container">
     <table class="tabela">
@@ -139,7 +139,11 @@
                 autoplay: 1,  // Reproduzir automaticamente
                 start: 39,     // Iniciar aos 39 segundos
                 loop: 1,       // Loop
-                playlist: 'IPLGZ07AjrY' // Playlist para o loop
+                playlist: 'IPLGZ07AjrY', // Playlist para o loop
+                controls: 0,   // Esconder os controles
+                modestbranding: 1,  // Esconder o logo do YouTube
+                showinfo: 0,   // Esconder o título do vídeo
+                rel: 0         // Evitar vídeos relacionados ao final
             },
             events: {
                 'onReady': onPlayerReady,
