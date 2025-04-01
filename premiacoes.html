@@ -20,6 +20,27 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            transition: background 0.3s, color 0.3s;
+        }
+        .light-mode {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .dark-mode {
+            background: #121212;
+            color: #ffffff;
+        }
+
+       .toggle-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: inherit;
         }
 
         .container {
@@ -263,6 +284,38 @@
     }
 
     setTimeout(setVolume, 2000); // Ajusta o volume após 2 segundos (tempo para o player carregar)
+    function toggleMode() {
+            const body = document.body;
+            const button = document.querySelector(".toggle-icon");
+            body.classList.toggle("dark-mode");
+            body.classList.toggle("light.mode");
+            const isDarkMode = body.classList.contains("dark-mode");
+            localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+            button.textContent = isDarkMode ? "🌙" : "☀️";
+        }
+
+        //Mantém o modo selecionado mesmo após recarregar a página
+        window.onload = function() {
+            const savedTheme = localStorage.getItem("theme");
+            const body = document.body;
+            const button = document.querySelector(".toggle-icon");
+            if (savedTheme === "light") {
+                body.classList.add("light-mode");
+                button.textContent = "☀️";               
+            } else {
+                body.classList.add("dark-mode");
+                button.textContent = "🌙";               
+            }
+            //Define o tema antes do carregamento da página para evitar o delay
+            (function(){
+                const savedTheme = localStorage.getItem("theme");
+                if (savedTheme) {
+                    document.documentElement.classList.add(savedTheme === "dark" ? "dark-mode" : "light-mode");
+                } else {
+                    document.documentElement.classList.add("dark-mode");
+                }
+            })
+        };
     </script>
 </body>
 </html>
