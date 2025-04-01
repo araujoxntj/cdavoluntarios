@@ -43,6 +43,17 @@
             border: none;
             color: inherit;
         }
+        .timer-message {
+            position:  fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            display: none;
+        }
 
         .container {
             width: 80%;
@@ -117,6 +128,7 @@
 </head>
 <body class="light-mode">
     <button class="toggle-icon" onclick="toggleMode()">☀️</button>
+    <div id="timer-message" class="timer-message"></div>
     <!-- Embutir áudio sem controles visíveis -->
     <iframe id="youtube-audio" width="0" height="0" 
     src="https://www.youtube.com/embed/f9_ebuB1VLM?autoplay=1&loop=1&playlist=f9_ebuB1VLM&enablejsapi=1" 
@@ -186,6 +198,23 @@
                 } else {
                     document.documentElement.classList.add("dark-mode");
                 }
+
+                let timeLeft = 60;
+                const timerMessage = document.getElementById("timer-message");
+
+                const countdown = setInterval(() => {
+                    timeLeft--;
+
+                    if (timeLeft <= 40) {
+                        timerMessage.style.display = "block";
+                        timerMessage.textContent = `Você será redirecionado em ${timeLeft} segundos...`;
+                    }
+
+                    if(timeLeft <= 0) {
+                        clearInterval(countdown);
+                        window.location.href = "https://cidadealtarp.com";
+                    }
+                }, 1000);
             })
         };
     </script>
