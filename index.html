@@ -86,11 +86,8 @@
 </head>
 <body>
 
-  <!-- Embutir áudio do YouTube com o tempo inicial configurado -->
-  <iframe id="youtube-audio" width="0" height="0" 
-      src="https://www.youtube.com/embed/IPLGZ07AjrY?autoplay=1&start=39&loop=1&playlist=IPLGZ07AjrY&controls=0&modestbranding=1&showinfo=0&rel=0" 
-      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-  </iframe>
+  <!-- Div para o player do YouTube -->
+  <div id="player"></div>
 
   <div class="container">
     <table class="tabela">
@@ -123,6 +120,41 @@
         <a href="premiacoes.html" class="botao-premiacoes" target="_blank">Ranking</a>
     </div>
   </div>
+
+  <!-- Script da API do YouTube -->
+  <script>
+    // Carregar a API do YouTube
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // Função chamada quando a API do YouTube está pronta
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            videoId: 'IPLGZ07AjrY',   // ID do vídeo
+            playerVars: {
+                autoplay: 1,           // Reproduzir automaticamente
+                start: 39,             // Começar a partir do segundo 39
+                loop: 1,               // Repetir o vídeo
+                playlist: 'IPLGZ07AjrY', // Playlist para o loop
+                controls: 0,           // Não mostrar controles
+                modestbranding: 1,     // Não mostrar o logo do YouTube
+                showinfo: 0,           // Não mostrar informações do vídeo
+                rel: 0                 // Não mostrar vídeos relacionados
+            },
+            events: {
+                'onReady': onPlayerReady,
+            }
+        });
+    }
+
+    // Função para iniciar a música e ajustar o volume
+    function onPlayerReady(event) {
+        event.target.setVolume(20);  // Ajusta o volume para 20%
+        event.target.playVideo();  // Inicia o vídeo
+    }
+  </script>
 
 </body>
 </html>
