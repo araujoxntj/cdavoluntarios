@@ -247,6 +247,10 @@
     </div>
 
     <script>
+          function setVolume() {
+            let iframe = document.getElementById("youtube-audio");
+            iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[20]}', '*');
+        }
         window.onload = function() {
             setTimeout(function() {
                 document.querySelector('.confetti').style.display = 'block';
