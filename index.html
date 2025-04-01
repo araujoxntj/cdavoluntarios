@@ -89,9 +89,10 @@
 
 <!-- Embutir áudio sem controles visíveis -->
 <iframe id="youtube-audio" width="0" height="0" 
-    src="https://www.youtube.com/embed/IPLGZ07AjrY?autoplay=1&start=39&loop=1&playlist=IPLGZ07AjrY&mute=1" 
+    src="https://www.youtube.com/embed/IPLGZ07AjrY?autoplay=1&start=39&loop=1&playlist=IPLGZ07AjrY" 
     frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
 </iframe>
+
 
 
         <div class="container">
@@ -129,9 +130,8 @@
     <script>
         function setVolume() {
             let iframe = document.getElementById("youtube-audio");
-            iframe.onload = function() {
-        // Desmutar o áudio após o carregamento
-        iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+            const player = new YT.Player(iframe);
+            player.setVolume(20); // Ajusta o volume para 20% (pode ajustar de acordo)
             iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[20]}', '*');
         }
     
