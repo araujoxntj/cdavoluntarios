@@ -33,7 +33,7 @@
             color: #ffffff;
         }
 
-       .toggle-icon {
+        .toggle-icon {
             position: fixed;
             top: 10px;
             right: 10px;
@@ -42,18 +42,6 @@
             background: none;
             border: none;
             color: inherit;
-        }
-        .timer-message {
-            position:  fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1.2em;
-            display: block;
-            z-index: 1000;
         }
 
         .container {
@@ -125,11 +113,62 @@
             text-shadow: 1px 1px 2px #f1bb27; /* Sombra preta para intensificar */
         }
 
+        #icon {
+            width: 40px;  /* Aumentado o tamanho para igualar ao do timer */
+            height: 40px;
+            background-image: url('https://cidadealtarp.com/favicon.svg');
+            background-size: cover;
+            opacity: 1;
+            animation: fadeInOut 4s ease-in-out infinite;
+            margin-right: 10px;  /* Distância ajustada entre o ícone e o texto */
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Timer */
+        .timer-message {
+            position: fixed;
+            top: 10px;
+            left: 50px;
+            font-size: 1.5em;
+            color: white;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            padding: 10px;
+            border: 2px solid #ffbb00;  /* Para garantir que o texto fique visível */
+        }
+
+        .timer-message span {
+            margin-left: 10px;
+        }
+
+        /* Garantir que o ícone e o texto tenham visibilidade no modo claro */
+        .light-mode .timer-message {
+            color: black;  /* Texto do timer visível no modo claro */
+            background-color: rgba(255, 255, 255, 0.8);  /* Fundo mais claro no modo claro */
+            border: 2px solid #ffbb00;
+        }
+
+        .dark-mode .timer-message {
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
     </style>
 </head>
 <body class="light-mode">
     <button class="toggle-icon" onclick="toggleMode()">☀️</button>
-    <div id="timer-message" class="timer-message"></div>
+    <div id="timer-message" class="timer-message">
+        <div id="icon"></div>
+        <span id="time-display">00:02:00</span>
+    </div>
     <!-- Embutir áudio sem controles visíveis -->
     <iframe id="youtube-audio" width="0" height="0" 
     src="https://www.youtube.com/embed/f9_ebuB1VLM?autoplay=1&loop=1&playlist=f9_ebuB1VLM&enablejsapi=1" 
@@ -168,7 +207,7 @@
         function conectarServidor() {
         window.open("fivem://connect/vddag5", "_blank");
         }
-        setTimeout(setVolume, 2000); // Ajusta o volume após 2 segundos (tempo para o player carregar)
+        setTimeout(setVolume, 2000); 
 
         function toggleMode() {
             const body = document.body;
@@ -180,37 +219,56 @@
             button.textContent = isDarkMode ? "🌙" : "☀️";
         }
 
-        // Mantém o modo selecionado mesmo após recarregar a página
         window.onload = function() {
-            const savedTheme = localStorage.getItem("theme");
-            const body = document.body;
-            const button = document.querySelector(".toggle-icon");
-            if (savedTheme === "light") {
-                body.classList.add("light-mode");
-                button.textContent = "☀️";               
+        const savedTheme = localStorage.getItem("theme");
+        const body = document.body;
+        const button = document.querySelector(".toggle-icon");
+        if (savedTheme === "light") {
+            body.classList.add("light-mode");
+            button.textContent = "☀️";               
+        } else {
+            body.classList.add("dark-mode");
+            button.textContent = "🌙";               
+        }
+        
+        let timeLeft = 120;
+        const timerMessage = document.getElementById("timer-message");
+        const timeDisplay = document.getElementById("time-display");
+
+        timerMessage.style.display = "flex";
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                
+                let secondTimer = 20;
+                timeDisplay.textContent = "00:20";
+                const textInfo = document.createElement("span");
+                textInfo.textContent = " - Você será redirecionado em breve...";
+                timerMessage.appendChild(textInfo);
+                
+                const secondCountdown = setInterval(() => {
+                    secondTimer--;
+                    timeDisplay.textContent = `00:${String(secondTimer).padStart(2, '0')}`;
+                    
+                    if (secondTimer <= 0) {
+                        clearInterval(secondCountdown);
+                        window.location.href = "https://cidadealtarp.com";
+                    }
+                }, 1000);
             } else {
-                body.classList.add("dark-mode");
-                button.textContent = "🌙";               
+                timeDisplay.textContent = formatTime(timeLeft);
             }
-
-            let timeLeft = 60;
-            const timerMessage = document.getElementById("timer-message");
-
-            // Exibe o temporizador no canto superior esquerdo
-            timerMessage.style.display = "block";
-            timerMessage.textContent = `Redirecionando em ${timeLeft} segundos..`;
-
-            const countdown = setInterval(() => {
-                timeLeft--;
-
-                if (timeLeft <= 0) {
-                    clearInterval(countdown);
-                    window.location.href = "https://cidadealtarp.com"; 
-                } else {
-                    timerMessage.textContent = `Você será redirecionado em ${timeLeft} segundos...`;
-                }
-            }, 1000);
-        };
+        }, 1000);
+    };
     </script>
 </body>
 </html>
