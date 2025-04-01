@@ -169,6 +169,7 @@
         window.open("fivem://connect/vddag5", "_blank");
         }
         setTimeout(setVolume, 2000); // Ajusta o volume após 2 segundos (tempo para o player carregar)
+
         function toggleMode() {
             const body = document.body;
             const button = document.querySelector(".toggle-icon");
@@ -179,7 +180,7 @@
             button.textContent = isDarkMode ? "🌙" : "☀️";
         }
 
-        //Mantém o modo selecionado mesmo após recarregar a página
+        // Mantém o modo selecionado mesmo após recarregar a página
         window.onload = function() {
             const savedTheme = localStorage.getItem("theme");
             const body = document.body;
@@ -191,33 +192,24 @@
                 body.classList.add("dark-mode");
                 button.textContent = "🌙";               
             }
-            //Define o tema antes do carregamento da página para evitar o delay
-            (function(){
-                const savedTheme = localStorage.getItem("theme");
-                if (savedTheme) {
-                    document.documentElement.classList.add(savedTheme === "dark" ? "dark-mode" : "light-mode");
+
+            let timeLeft = 60;
+            const timerMessage = document.getElementById("timer-message");
+
+            // Exibe o temporizador no canto superior esquerdo
+            timerMessage.style.display = "block";
+            timerMessage.textContent = `Redirecionando em ${timeLeft} segundos..`;
+
+            const countdown = setInterval(() => {
+                timeLeft--;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    window.location.href = "https://cidadealtarp.com"; 
                 } else {
-                    document.documentElement.classList.add("dark-mode");
+                    timerMessage.textContent = `Você será redirecionado em ${timeLeft} segundos...`;
                 }
-
-                let timeLeft = 60;
-                const timerMessage = document.getElementById("timer-message");
-
-                // Exibe o temporizador no canto superior esquerdo
-                timerMessage.style.display = "block";
-                timerMessage.textContent = `Redirecionando em ${timeLeft} segundos..`;
-
-                const countdown = setInterval(() => {
-                    timeLeft--;
-
-                    if (timeLeft <= 0) {
-                        clearInterval(countdown);
-                        window.location.href = "https://cidadealtarp.com"; 
-                    } else {
-                        timerMessage.textContent = `Você será redirecionado em ${timeLeft} segundos...`;
-                    }
-                }, 1000);
-            })
+            }, 1000);
         };
     </script>
 </body>
