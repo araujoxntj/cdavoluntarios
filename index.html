@@ -86,11 +86,8 @@
 </head>
 <body>
 
-  <!-- Embutir áudio do YouTube com o tempo inicial configurado -->
-  <iframe id="youtube-audio" width="0" height="0" 
-    src="https://youtu.be/IPLGZ07AjrY?list=TLGGsIFHI04o6kAwMTA0MjAyNQ" 
-    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-  </iframe>
+  <!-- Div para o player do YouTube -->
+  <div id="player"></div>
 
   <div class="container">
     <table class="tabela">
@@ -124,14 +121,37 @@
     </div>
   </div>
 
+  <!-- Script da API do YouTube -->
   <script>
-      // Script para ajustar o volume após o carregamento
-      function setVolume() {
-          let iframe = document.getElementById("youtube-audio");
-          iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[20]}', '*'); // Ajusta o volume para 20%
-      }
-      
-      setTimeout(setVolume, 2000); // Ajusta o volume após 2 segundos
+    // Carregar a API do YouTube
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // Criar o player do YouTube
+    var player;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            videoId: 'IPLGZ07AjrY',
+            playerVars: {
+                autoplay: 1,  // Reproduzir automaticamente
+                start: 39,     // Iniciar aos 39 segundos
+                loop: 1,       // Loop
+                playlist: 'IPLGZ07AjrY' // Playlist para o loop
+            },
+            events: {
+                'onReady': onPlayerReady,
+            }
+        });
+    }
+
+    // Função para iniciar a música e ajustar o volume
+    function onPlayerReady(event) {
+        event.target.setVolume(20);  // Ajusta o volume para 20%
+        event.target.playVideo();  // Inicia o vídeo
+    }
   </script>
 
 </body>
