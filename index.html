@@ -129,25 +129,36 @@
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // Função chamada quando a API do YouTube está pronta
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            videoId: 'IPLGZ07AjrY',   // ID do vídeo
-            playerVars: {
-                autoplay: 1,           // Reproduzir automaticamente
-                start: 39,             // Começar a partir do segundo 39
-                loop: 1,               // Repetir o vídeo
-                playlist: 'IPLGZ07AjrY', // Playlist para o loop
-                controls: 0,           // Não mostrar controles
-                modestbranding: 1,     // Não mostrar o logo do YouTube
-                showinfo: 0,           // Não mostrar informações do vídeo
-                rel: 0                 // Não mostrar vídeos relacionados
-            },
-            events: {
-                'onReady': onPlayerReady,
-            }
-        });
-    }
+    var player;
+
+// Função chamada quando a API do YouTube está pronta
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        videoId: 'IPLGZ07AjrY',   // ID do vídeo
+        playerVars: {
+            autoplay: 1,           // Reproduzir automaticamente
+            start: 39,             // Começar a partir do segundo 39
+            loop: 1,               // Repetir o vídeo
+            playlist: 'IPLGZ07AjrY', // Playlist para o loop
+            controls: 0,           // Não mostrar controles
+            modestbranding: 1,     // Não mostrar o logo do YouTube
+            showinfo: 0,           // Não mostrar informações do vídeo
+            rel: 0,                // Não mostrar vídeos relacionados
+            iv_load_policy: 3     // Não mostrar anotações de vídeo
+        },
+        events: {
+            'onReady': onPlayerReady,
+        }
+    });
+}
+
+// Função chamada quando o player está pronto
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+// Criar um iframe invisível na tela
+document.write('<iframe id="player" width="0" height="0" style="visibility:hidden;"></iframe>');
 
     // Função para iniciar a música e ajustar o volume
     function onPlayerReady(event) {
