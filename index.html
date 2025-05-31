@@ -16,7 +16,7 @@
             background: black;
         }
 
-        #video-bg {
+        .video-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -24,7 +24,6 @@
             height: 100vh;
             z-index: -1;
             pointer-events: none;
-            object-fit: cover;
         }
 
         .conteudo {
@@ -64,7 +63,20 @@
     </style>
 </head>
 <body>
-    <div id="video-bg"></div>
+    <!-- Vídeo de fundo (loop infinito, sem controles) -->
+    <iframe class="video-bg"
+        src="https://www.youtube.com/embed/wJv6ZJUxatg?autoplay=1&mute=1&controls=0&showinfo=0&modestbranding=1&loop=1&playlist=wJv6ZJUxatg&enablejsapi=1&rel=0"
+        frameborder="0"
+        allow="autoplay; fullscreen"
+        allowfullscreen>
+    </iframe>
+
+    <!-- Música escondida (loop infinito, começando aos 60s) -->
+    <iframe style="display: none;"
+        src="https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&controls=0&showinfo=0&modestbranding=1&loop=1&playlist=NgJJo7lLAuI&start=60"
+        frameborder="0"
+        allow="autoplay">
+    </iframe>
 
     <div class="conteudo">
         <h1>Cidade Alta - Voluntários</h1>
@@ -74,63 +86,5 @@
             <a href="pagina3.html" class="botao">Página 3</a>
         </div>
     </div>
-
-    <!-- YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script>
-        let playerVideo, playerAudio;
-
-        // Cria o player de vídeo (fundo)
-        function onYouTubeIframeAPIReady() {
-            playerVideo = new YT.Player('video-bg', {
-                videoId: 'wJv6ZJUxatg', // ID do vídeo de fundo
-                playerVars: {
-                    autoplay: 1,
-                    controls: 0,
-                    showinfo: 0,
-                    modestbranding: 1,
-                    loop: 1,
-                    fs: 0,
-                    cc_load_policy: 0,
-                    iv_load_policy: 3,
-                    autohide: 1,
-                    playlist: 'wJv6ZJUxatg',
-                    mute: 1
-                },
-                events: {
-                    onReady: function(e) {
-                        e.target.playVideo();
-                    }
-                }
-            });
-
-            // Cria o player de áudio (música)
-            playerAudio = new YT.Player('hidden-audio', {
-                videoId: 'NgJJo7lLAuI', // ID da música
-                playerVars: {
-                    autoplay: 1,
-                    controls: 0,
-                    showinfo: 0,
-                    modestbranding: 1,
-                    loop: 1,
-                    fs: 0,
-                    cc_load_policy: 0,
-                    iv_load_policy: 3,
-                    autohide: 1,
-                    playlist: 'NgJJo7lLAuI',
-                    start: 60 // Começa em 1m
-                },
-                events: {
-                    onReady: function(e) {
-                        e.target.setVolume(20); // Ajusta o volume da música
-                        e.target.playVideo();
-                    }
-                }
-            });
-        }
-    </script>
-
-    <!-- Áudio escondido -->
-    <div id="hidden-audio" style="width:0; height:0; overflow:hidden;"></div>
 </body>
 </html>
