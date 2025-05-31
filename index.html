@@ -1,136 +1,134 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cidade Alta - Voluntários</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Comfortaa', sans-serif;
-            background: black;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cidade Alta - Voluntários</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Comfortaa', sans-serif;
+      background: black;
+    }
 
-        #video-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-            object-fit: cover;
-        }
+    #video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
 
-        .conteudo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-            z-index: 1;
-        }
+    .conteudo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      z-index: 1;
+    }
 
-        .botoes {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
+    .botoes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
 
-        .botao {
-            padding: 12px 24px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: black;
-            background: #ffbb00;
-            border: none;
-            border-radius: 10px;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 0 10px #ffbb00;
-        }
+    .botao {
+      padding: 12px 24px;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: black;
+      background: #ffbb00;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 10px #ffbb00;
+    }
 
-        .botao:hover {
-            background: #cc8800;
-            box-shadow: 0 0 15px #cc8800;
-        }
-    </style>
+    .botao:hover {
+      background: #cc8800;
+      box-shadow: 0 0 15px #cc8800;
+    }
+  </style>
 </head>
 <body>
-    <div id="video-bg"></div>
+  <div id="video-bg"></div>
 
-    <div class="conteudo">
-        <h1>Cidade Alta - Voluntários</h1>
-        <div class="botoes">
-            <a href="pagina1.html" class="botao">Página 1</a>
-            <a href="pagina2.html" class="botao">Página 2</a>
-            <a href="pagina3.html" class="botao">Página 3</a>
-        </div>
+  <div class="conteudo">
+    <h1>Cidade Alta - Voluntários</h1>
+    <div class="botoes">
+      <a href="pagina1.html" class="botao">Página 1</a>
+      <a href="pagina2.html" class="botao">Página 2</a>
+      <a href="pagina3.html" class="botao">Página 3</a>
     </div>
+  </div>
 
-    <!-- YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script>
-        let playerVideo, playerAudio;
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let playerVideo, playerAudio;
 
-        // Cria o player de vídeo (fundo)
-        function onYouTubeIframeAPIReady() {
-            playerVideo = new YT.Player('video-bg', {
-                videoId: 'wJv6ZJUxatg', // ID do vídeo de fundo
-                playerVars: {
-                    autoplay: 1,
-                    controls: 0,
-                    showinfo: 0,
-                    modestbranding: 1,
-                    loop: 1,
-                    fs: 0,
-                    cc_load_policy: 0,
-                    iv_load_policy: 3,
-                    autohide: 1,
-                    playlist: 'wJv6ZJUxatg',
-                    mute: 1
-                },
-                events: {
-                    onReady: function(e) {
-                        e.target.playVideo();
-                    }
-                }
-            });
-
-            // Cria o player de áudio (música)
-            playerAudio = new YT.Player('hidden-audio', {
-                videoId: 'NgJJo7lLAuI', // ID da música
-                playerVars: {
-                    autoplay: 1,
-                    controls: 0,
-                    showinfo: 0,
-                    modestbranding: 1,
-                    loop: 1,
-                    fs: 0,
-                    cc_load_policy: 0,
-                    iv_load_policy: 3,
-                    autohide: 1,
-                    playlist: 'NgJJo7lLAuI',
-                    start: 60 // Começa em 1m
-                },
-                events: {
-                    onReady: function(e) {
-                        e.target.setVolume(20); // Ajusta o volume da música
-                        e.target.playVideo();
-                    }
-                }
-            });
+    function onYouTubeIframeAPIReady() {
+      // Player de vídeo de fundo
+      playerVideo = new YT.Player('video-bg', {
+        videoId: 'wJv6ZJUxatg',
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          showinfo: 0,
+          modestbranding: 1,
+          loop: 1,
+          fs: 0,
+          cc_load_policy: 0,
+          iv_load_policy: 3,
+          autohide: 1,
+          playlist: 'wJv6ZJUxatg',
+          mute: 1
+        },
+        events: {
+          onReady: function(e) {
+            e.target.playVideo();
+          }
         }
-    </script>
+      });
 
-    <!-- Áudio escondido -->
-    <div id="hidden-audio" style="width:0; height:0; overflow:hidden;"></div>
+      // Player de áudio (música)
+      playerAudio = new YT.Player('hidden-audio', {
+        videoId: 'NgJJo7lLAuI',
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          showinfo: 0,
+          modestbranding: 1,
+          loop: 1,
+          fs: 0,
+          cc_load_policy: 0,
+          iv_load_policy: 3,
+          autohide: 1,
+          playlist: 'NgJJo7lLAuI',
+          start: 60
+        },
+        events: {
+          onReady: function(e) {
+            e.target.setVolume(20);
+            e.target.playVideo();
+          }
+        }
+      });
+    }
+  </script>
+
+  <!-- Áudio oculto -->
+  <div id="hidden-audio" style="width:0; height:0; overflow:hidden;"></div>
 </body>
 </html>
