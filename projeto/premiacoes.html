@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cidade Alta - Voluntários</title>
+<link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/svg+xml" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --amarelo: #ffbb00;
+    --amarelo-escuro: #cc8800;
+    --cinza-claro: #f9f9f9;
+    --cinza-medio: #ccc;
+    --cinza-escuro: #333;
+    --preto: #121212;
+    --branco: #fff;
+
+    --transition-speed: 0.3s;
+  }
+
+  /* Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: var(--preto);
+    color: var(--branco);
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px 40px;
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: rgba(30,30,30,0.85);
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--amarelo);
+    text-shadow: 0 0 12px var(--amarelo);
+  }
+
+  /* Cards Grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: #222;
+    border-radius: 14px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 10px rgba(255, 187, 0, 0.2);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: default;
+  }
+
+  .card:hover {
+    box-shadow: 0 12px 30px rgba(255, 187, 0, 0.7);
+    transform: translateY(-6px);
+  }
+
+  .card h2 {
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: var(--amarelo);
+    margin-bottom: 10px;
+    text-shadow: 0 0 6px var(--amarelo);
+  }
+
+  .card p {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: inherit;
+  }
+
+  .premiacoes {
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--amarelo);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Botões */
+  .botoes {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .botao-planilha, .botao-premiacoes {
+    background: var(--amarelo);
+    color: var(--preto);
+    font-weight: 600;
+    font-size: 1.15rem;
+    padding: 14px 30px;
+    border-radius: 14px;
+    box-shadow: 0 6px 15px rgba(255,187,0,0.7);
+    text-decoration: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    user-select: none;
+  }
+
+  .botao-planilha:hover, .botao-premiacoes:hover,
+  .botao-planilha:focus, .botao-premiacoes:focus {
+    background: var(--amarelo-escuro);
+    box-shadow: 0 8px 25px rgba(204,136,0,0.9);
+    outline: none;
+    transform: translateY(-3px);
+  }
+
+  /* Responsividade */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+    }
+    .card {
+      padding: 18px 16px;
+    }
+    .card h2 {
+      font-size: 1.4rem;
+    }
+    .botao-planilha, .botao-premiacoes {
+      font-size: 1rem;
+      padding: 12px 20px;
+    }
+  }
+
+</style>
+</head>
+<body aria-live="polite" aria-label="Ranking de voluntários Cidade Alta">
+
+  <main class="container" role="main">
+    <h1>Contagem de horas mensal</h1>
+
+    <section class="cards" aria-label="Lista de voluntários com informações detalhadas">
+  <article class="card" tabindex="0">
+    <h2>🥇 Neto</h2>
+    <p>Horas: 272</p>
+    <p>Diamantes: 37.020</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>🥈 Melão</h2>
+    <p>Horas: 63</p>
+    <p>Diamantes: 13.500</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>🥉 Hank</h2>
+    <p>Horas: 61</p>
+    <p>Diamantes: 11.810</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>Hugo</h2>
+    <p>Horas: 56</p>
+    <p>Diamantes: 10.670</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>Portuga</h2>
+    <p>Horas: 45</p>
+    <p>Diamantes: 9.780</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>Elisa</h2>
+    <p>Horas: 43</p>
+    <p>Diamantes: 10.050</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>Matheus</h2>
+    <p>Horas: 26</p>
+    <p>Diamantes: 6.190</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>Berlim</h2>
+    <p>Horas: 21</p>
+    <p>Diamantes: 7.800</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>Patrick</h2>
+    <p>Horas: 17</p>
+    <p>Diamantes: 7.400</p>
+  </article>
+
+  <article class="card" tabindex="0">
+    <h2>Vlad</h2>
+    <p>Horas: 0</p>
+    <p>Diamantes: 0</p>
+  </article>
+</section>
+
+
+    <section class="botoes" aria-label="Botões para acessar planilhas e tabela de premiações">
+      <a href="index.html" target="_blank" rel="noopener noreferrer" class="botao-planilha" role="button" aria-label="Abrir planilha de voluntários">
+        Página inicial
+      </a>
+      <a href="agradecimento.html" target="_blank" rel="noopener noreferrer" class="botao-premiacoes" role="button" aria-label="Abrir tabela de premiações">
+        Agradecimento
+      </a>
+    </section>
+  </main>
+
+</body>
+</html>
+<!--   <audio id="hidden-audio" autoplay loop>
+ -->    

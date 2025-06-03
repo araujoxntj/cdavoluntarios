@@ -1,72 +1,132 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cidade Alta - Voluntários</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet" />
-    <style>
-        html, body {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            overflow: hidden;
-            font-family: 'Comfortaa', sans-serif;
-            background: black;
-        }
-        #video-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            object-fit: cover;
-            z-index: -1;
-            pointer-events: none;
-            background: black;
-        }
-        .conteudo {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-            z-index: 1;
-        }
-        .botoes {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .botao {
-            padding: 12px 24px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: black;
-            background: #ffbb00;
-            border: none;
-            border-radius: 10px;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 0 10px #ffbb00;
-        }
-        .botao:hover {
-            background: #cc8800;
-            box-shadow: 0 0 15px #cc8800;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cidade Alta</title>
+  <link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/svg+xml" />
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Comfortaa', sans-serif;
+    }
+    #video-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 110vw;   /* maior que 100% para ultrapassar bordas */
+      height: 110vh;  /* maior que 100% */
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden; /* esconde bordas do iframe */
+    }
+
+    #video-bg iframe {
+      position: absolute;
+      top: -4vh;          /* sobe um pouco para eliminar espaço embaixo */
+      left: -10vw;         /* desloca um pouco para a esquerda */
+      width: 130vw;       /* aumenta largura para cobrir a lateral direita */
+      height: 130vh;      /* aumenta altura para cobrir embaixo */
+      pointer-events: none;
+      filter: brightness(0.7);
+      border: none;
+    }
+    .conteudo {
+      position: fixed;
+      bottom: 80px;   /* distancia da parte de baixo */
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: white;
+      z-index: 10;
+      width: 100%;    /* para garantir que o texto centralize */
+    }
+
+    .botoes {
+      margin-top: 10px;
+      justify-content: center;
+      display: flex;
+      gap: 20px;
+    }
+    .botao {
+      padding: 12px 24px;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: black;
+      background: #ffbb00;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 10px #ffbb00;
+    }
+    .botao:hover {
+      background: #cc8800;
+      box-shadow: 0 0 15px #cc8800;
+    }
+    #hidden-audio {
+      width: 0; height: 0; overflow: hidden;
+    }
+  </style>
 </head>
 <body>
-    <video autoplay muted loop playsinline id="video-bg">
-        <source src="video/cda.mp4" type="video/mp4" />
-        Seu navegador não suporta o elemento de vídeo.
-    </video>
 
-    <div class="conteudo">
-        <h1>Cidade Alta - Voluntários</h1>
-        <div class="botoes">
-            <a href="pagina1.html" class="botao">Página 1</a>
-            <a href="pagina2.html" class="botao">Página 2</a>
-            <a href="pagina3.html" class="botao">Página 3</a>
-        </div>
+  <div id="video-bg">
+    <iframe 
+      src="https://streamable.com/o/chq7h8?autoplay=1&loop=1&muted=1&controls=0&background=1" 
+      frameborder="0" 
+      allow="autoplay; fullscreen" 
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <div class="conteudo">
+    <h1>Cidade Alta - Voluntários</h1>
+    <div class="botoes">
+      <a href="premiacoes.html" class="botao">Premiações</a>
+      <a href="agradecimento.html" class="botao">Agradecimento</a>
     </div>
+  </div>
+
+  <!-- Música do YouTube (embed invisível) -->
+<iframe id="youtube-audio" width="0" height="0" 
+  src="https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=1&controls=0&loop=1&playlist=NgJJo7lLAuI" 
+  frameborder="0" allow="autoplay; encrypted-media"></iframe>
+
+<button id="toggle-sound">Ativar Som</button>
+
+<script>
+  const iframe = document.getElementById('youtube-audio');
+  const btn = document.getElementById('toggle-sound');
+
+  btn.addEventListener('click', () => {
+    // Aqui não tem como controlar som do iframe direto sem API, então a solução prática:
+    // Recarregar iframe com mute=0, ou
+    // Usar a API JS do YouTube para controlar volume (mais complexo)
+    
+    // Como solução simples, recarregue o iframe com mute=0:
+    iframe.src = "https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=0&controls=0&loop=1&playlist=NgJJo7lLAuI";
+
+    btn.disabled = true;
+    btn.textContent = 'Som ativado';
+  });
+</script>
+
 </body>
 </html>
+<script>
+  // Verifica se o navegador suporta autoplay
+  const video = document.querySelector('#video-bg iframe');
+  video.addEventListener('load', () => {
+    if (video.contentWindow) {
+      video.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    }
+  });
+
+  // Reproduz o áudio automaticamente
+  const audio = document.querySelector('#hidden-audio');
+  audio.addEventListener('load', () => {
+    audio.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+  }); 
