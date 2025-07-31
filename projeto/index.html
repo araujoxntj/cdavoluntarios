@@ -13,35 +13,33 @@
       overflow: hidden;
       font-family: 'Comfortaa', sans-serif;
     }
+
     #video-bg {
       position: fixed;
       top: 0; left: 0;
-      width: 110vw;   /* maior que 100% para ultrapassar bordas */
-      height: 110vh;  /* maior que 100% */
+      width: 100%;
+      height: 100%;
       z-index: -1;
       pointer-events: none;
-      overflow: hidden; /* esconde bordas do iframe */
+      overflow: hidden;
     }
 
-    #video-bg iframe {
-      position: absolute;
-      top: -4vh;          /* sobe um pouco para eliminar espaço embaixo */
-      left: -10vw;         /* desloca um pouco para a esquerda */
-      width: 130vw;       /* aumenta largura para cobrir a lateral direita */
-      height: 130vh;      /* aumenta altura para cobrir embaixo */
-      pointer-events: none;
+    #video-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       filter: brightness(0.7);
-      border: none;
     }
+
     .conteudo {
       position: fixed;
-      bottom: 80px;   /* distancia da parte de baixo */
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
       color: white;
       z-index: 10;
-      width: 100%;    /* para garantir que o texto centralize */
+      width: 100%;
     }
 
     .botoes {
@@ -50,6 +48,7 @@
       display: flex;
       gap: 20px;
     }
+
     .botao {
       padding: 12px 24px;
       font-size: 1.5em;
@@ -62,24 +61,34 @@
       transition: all 0.3s ease-in-out;
       box-shadow: 0 0 10px #ffbb00;
     }
+
     .botao:hover {
       background: #cc8800;
       box-shadow: 0 0 15px #cc8800;
     }
-    #hidden-audio {
-      width: 0; height: 0; overflow: hidden;
+
+    #toggle-sound {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 20;
+      padding: 10px 20px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
   <div id="video-bg">
-    <iframe 
-      src="https://streamable.com/o/chq7h8?autoplay=1&loop=1&muted=1&controls=0&background=1" 
-      frameborder="0" 
-      allow="autoplay; fullscreen" 
-      allowfullscreen
-    ></iframe>
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="projeto\video\cda2.mp4" type="video/mp4" />
+      Seu navegador não suporta a tag de vídeo.
+    </video>
   </div>
 
   <div class="conteudo">
@@ -91,42 +100,22 @@
   </div>
 
   <!-- Música do YouTube (embed invisível) -->
-<iframe id="youtube-audio" width="0" height="0" 
-  src="https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=1&controls=0&loop=1&playlist=NgJJo7lLAuI" 
-  frameborder="0" allow="autoplay; encrypted-media"></iframe>
+  <iframe id="youtube-audio" width="0" height="0" 
+    src="https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=1&controls=0&loop=1&playlist=NgJJo7lLAuI" 
+    frameborder="0" allow="autoplay; encrypted-media"></iframe>
 
-<button id="toggle-sound">Ativar Som</button>
+  <button id="toggle-sound">Ativar Som</button>
 
-<script>
-  const iframe = document.getElementById('youtube-audio');
-  const btn = document.getElementById('toggle-sound');
+  <script>
+    const iframe = document.getElementById('youtube-audio');
+    const btn = document.getElementById('toggle-sound');
 
-  btn.addEventListener('click', () => {
-    // Aqui não tem como controlar som do iframe direto sem API, então a solução prática:
-    // Recarregar iframe com mute=0, ou
-    // Usar a API JS do YouTube para controlar volume (mais complexo)
-    
-    // Como solução simples, recarregue o iframe com mute=0:
-    iframe.src = "https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=0&controls=0&loop=1&playlist=NgJJo7lLAuI";
-
-    btn.disabled = true;
-    btn.textContent = 'Som ativado';
-  });
-</script>
+    btn.addEventListener('click', () => {
+      iframe.src = "https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=0&controls=0&loop=1&playlist=NgJJo7lLAuI";
+      btn.disabled = true;
+      btn.textContent = 'Som ativado';
+    });
+  </script>
 
 </body>
 </html>
-<script>
-  // Verifica se o navegador suporta autoplay
-  const video = document.querySelector('#video-bg iframe');
-  video.addEventListener('load', () => {
-    if (video.contentWindow) {
-      video.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-    }
-  });
-
-  // Reproduz o áudio automaticamente
-  const audio = document.querySelector('#hidden-audio');
-  audio.addEventListener('load', () => {
-    audio.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-  }); 
