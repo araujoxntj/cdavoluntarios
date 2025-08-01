@@ -173,16 +173,29 @@
 </div>
 
 <script>
-  const manutencaoAtiva = true; // ✅ Continua sendo usado no início
+  let manutencaoAtiva = true; // Inicialmente ativa
+
+  // Verifica se a manutenção já foi finalizada anteriormente
+  const manutencaoFinalizada = localStorage.getItem('manutencaoFinalizada') === 'true';
+  if (manutencaoFinalizada) {
+    manutencaoAtiva = false;
+    mostrarConteudoSite();
+  }
+
   const agora = new Date();
   const fimManutencao = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 21, 0, 0).getTime();
   let tempoRestanteInicial = Math.floor((fimManutencao - agora.getTime()) / 1000);
   if (tempoRestanteInicial < 0) tempoRestanteInicial = 0;
 
-
   function mostrarConteudoSite() {
     document.getElementById('manutencao').style.display = 'none';
     document.getElementById('conteudoSite').style.display = 'block';
+  }
+
+  function finalizarManutencao() {
+    localStorage.setItem('manutencaoFinalizada', 'true');
+    manutencaoAtiva = false;
+    mostrarConteudoSite();
   }
 
   if (manutencaoAtiva) {
@@ -200,7 +213,7 @@
         tempoRestante--;
         setTimeout(atualizarContador, 1000);
       } else {
-        mostrarConteudoSite();
+        finalizarManutencao();
       }
     }
 
@@ -231,6 +244,7 @@
     });
   }
 </script>
+
 
 
 </body>

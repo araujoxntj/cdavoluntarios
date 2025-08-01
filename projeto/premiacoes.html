@@ -318,14 +318,33 @@
 
 <script>
 
-  const manutencaoAtiva = true; // ou pegue isso via API/config
+// Ajuste aqui para ativar/desativar a manutenção (pode vir de API/config)
+  let manutencaoAtiva = true;
 
-if (manutencaoAtiva) {
-  // Se não estiver na página index.html (modo conteúdo liberado), redireciona
-  if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/') {
-    window.location.href = '/';  // Ou direto para /manutencao.html, se tiver separado
+  // Verifica se o usuário já viu que a manutenção acabou
+  const manutencaoFinalizada = localStorage.getItem('manutencaoFinalizada') === 'true';
+
+  if (manutencaoFinalizada) {
+    // Manutenção acabou, libera o site e evita redirecionar
+    manutencaoAtiva = false;
   }
-}
+
+  if (manutencaoAtiva) {
+    const path = window.location.pathname;
+
+    // Permite ficar só na página raiz (manutenção)
+    if (path !== '/' && !path.endsWith('index.html')) {
+      window.location.href = '/';
+    }
+  }
+
+  // Função para chamar quando a manutenção acabar (exemplo: no timer da página index)
+  function finalizarManutencao() {
+    localStorage.setItem('manutencaoFinalizada', 'true');
+    manutencaoAtiva = false;
+    // Redireciona para a página inicial real após liberar o site
+    window.location.href = '/index.html';
+  }
 
   const volunteersData = [
     {
