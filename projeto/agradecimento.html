@@ -259,6 +259,16 @@
     <audio id="alert-sound" src="alerta.mp3" preload="auto"></audio>
 
     <script>
+
+        const manutencaoAtiva = true; // ou pegue isso via API/config
+
+        if (manutencaoAtiva) {
+        // Se não estiver na página index.html (modo conteúdo liberado), redireciona
+        if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/') {
+            window.location.href = '/';  // Ou direto para /manutencao.html, se tiver separado
+        }
+        }
+
       // Tema toggle com localStorage e atributo aria-pressed
       const body = document.body;
       const toggleBtn = document.getElementById('toggle-theme-btn');
