@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <script src="js/checkManutencao.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Em Manutenção - Cidade Alta</title>
@@ -55,6 +56,7 @@
     .logo {
       width: 100px;
       margin-bottom: 20px;
+      animation: appearZoom 1.5s ease-out forwards;
     }
 
     .contador {
@@ -75,6 +77,17 @@
       100% { transform: scale(1); }
     }
 
+    @keyframes appearZoom {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     .voltar {
       margin-top: 30px;
       display: inline-block;
@@ -89,25 +102,35 @@
       transition: all 0.3s ease-in-out;
       box-shadow: 0 0 10px #ffbb00;
     }
-    @keyframes appearZoom {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.logo {
-  animation: appearZoom 1.5s ease-out forwards;
-}
-
 
     .voltar:hover {
       background: #cc8800;
       box-shadow: 0 0 15px #cc8800;
+    }
+
+    /* Estilo e posição do botão ativar som */
+    #btn-som {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+
+      background-color: #222;        /* Fundo escuro */
+      color: white;                  /* Texto branco */
+      font-weight: 700;              /* Negrito */
+      padding: 10px 20px;            /* Espaçamento interno */
+      border: none;
+      border-radius: 12px;           /* Bordas arredondadas */
+      cursor: pointer;
+      font-family: 'Comfortaa', sans-serif;
+      font-size: 1.1em;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #btn-som:hover {
+      background-color: #444;       /* Tom mais claro no hover */
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
     }
   </style>
 </head>
@@ -120,6 +143,13 @@
     </video>
   </div>
 
+  <audio id="musica" loop autoplay muted>
+    <source src="video/cda3.mp3" type="audio/mp3" />
+  </audio>
+
+  <!-- Botão posicionado no canto superior direito -->
+  <button id="btn-som" onclick="ativarSom()">Ativar Som</button>
+
   <div class="conteudo">
     <img src="https://cidadealtarp.com/favicon.svg" class="logo" alt="Logo Cidade Alta" />
     <h1>Estamos em manutenção</h1>
@@ -129,28 +159,42 @@
   </div>
 
   <script>
+    function ativarSom() {
+      const audio = document.getElementById('musica');
+      audio.muted = false;
+      audio.play();
+
+      // Desabilita o botão e muda o texto após ativar o som
+      const btn = document.getElementById('btn-som');
+      btn.disabled = true;
+      btn.innerText = 'Som ativado';
+      btn.style.cursor = 'default';
+      btn.style.opacity = '0.7';
+    }
+  </script>
+
+  <script>
     // Ajuste aqui o tempo de cooldown (em segundos)
     let tempoRestante = 15 * 60 * 60; // 15 horas
 
     function atualizarContador() {
-    const contador = document.getElementById("contador");
-    const horas = String(Math.floor(tempoRestante / 3600)).padStart(2, '0');
-    const minutos = String(Math.floor((tempoRestante % 3600) / 60)).padStart(2, '0');
-    const segundos = String(tempoRestante % 60).padStart(2, '0');
-    contador.textContent = `${horas}:${minutos}:${segundos}`;
+      const contador = document.getElementById("contador");
+      const horas = String(Math.floor(tempoRestante / 3600)).padStart(2, '0');
+      const minutos = String(Math.floor((tempoRestante % 3600) / 60)).padStart(2, '0');
+      const segundos = String(tempoRestante % 60).padStart(2, '0');
+      contador.textContent = `${horas}:${minutos}:${segundos}`;
 
-    if (tempoRestante > 0) {
+      if (tempoRestante > 0) {
         tempoRestante--;
         setTimeout(atualizarContador, 1000);
-    } else {
+      } else {
         contador.textContent = "00:00:00";
         // Redireciona automaticamente para index.html
         window.location.href = "index.html";
-    }
+      }
     }
 
     atualizarContador();
-
   </script>
 
 </body>

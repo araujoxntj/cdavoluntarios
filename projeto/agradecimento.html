@@ -1,285 +1,395 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Agradecimento - Cidade Alta</title>
-    <link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/png" />
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet" />
     <style>
-        body {
-            font-family: 'Comfortaa', sans-serif;
-            text-align: center;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            transition: background 0.3s, color 0.3s;
-            border: 5px solid #ffbb00;
-            border-radius: 15px;
-        }
+      /* Variáveis CSS para cores e transições */
+      :root {
+        --amarelo: #ffbb00;
+        --amarelo-escuro: #cc8800;
+        --laranja: #fca400;
+        --laranja-escuro: #cc7a00;
+        --preto: #121212;
+        --cinza-escuro: #222;
+        --branco: #fff;
+        --transition-speed: 0.3s;
+      }
 
-        .light-mode {
-            background: url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
-            background-size: cover;
-            color: #000000;
-        }
+      /* Reset básico */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        .dark-mode {
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
-        }
+      body {
+        font-family: 'Comfortaa', cursive, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
+        background-size: cover;
+        color: var(--branco);
+        padding: 20px;
+        transition: background 0.5s var(--transition-speed), color 0.5s var(--transition-speed);
+      }
 
-        .toggle-icon {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: inherit;
-        }
+      /* Modos tema claro e escuro */
+      body.light-mode {
+        background: url('https://cidadealtarp.com/favicon.svg') no-repeat center center fixed;
+        background-size: cover;
+        color: #000;
+      }
+      body.light-mode .container {
+        background: rgba(255, 255, 255, 0.95);
+        color: #000;
+        box-shadow: 0 0 20px var(--amarelo);
+      }
+      body.light-mode .botao-planilha,
+      body.light-mode .botao-premiacoes {
+        background: var(--amarelo);
+        color: var(--preto);
+        box-shadow: 0 0 10px var(--amarelo);
+      }
+      body.light-mode .botao-planilha:hover,
+      body.light-mode .botao-premiacoes:hover {
+        background: var(--amarelo-escuro);
+        box-shadow: 0 0 15px var(--amarelo-escuro);
+      }
 
-        .container {
-            width: 80%;
-            background: rgba(20, 20, 20, 0.95);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 187, 0, 0.8);
-            backdrop-filter: blur(12px);
-            max-height: 100%;
-            overflow: auto;
-        }
+      /* Cabeçalho fixo com logo e botão toggle tema */
+      header {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        background: rgba(20, 20, 20, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        z-index: 10000;
+      }
+      #icon {
+        width: 48px;
+        height: 48px;
+        background-image: url('https://cidadealtarp.com/favicon.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: fadeInOut 4s ease-in-out infinite;
+      }
+      @keyframes fadeInOut {
+        0%, 100% {opacity: 1;}
+        50% {opacity: 0.3;}
+      }
 
+      /* Botão toggle modo */
+      .toggle-icon {
+        font-size: 28px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: inherit;
+        transition: transform var(--transition-speed);
+      }
+      .toggle-icon:hover, .toggle-icon:focus {
+        transform: scale(1.1);
+        outline: none;
+      }
+
+      /* Container principal */
+      .container {
+        margin-top: 80px; /* para não ficar atrás do header */
+        width: 90%;
+        max-width: 900px;
+        background: rgba(20, 20, 20, 0.9);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(255, 187, 0, 0.8);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        color: var(--branco);
+        transition: background 0.5s var(--transition-speed), color 0.5s var(--transition-speed);
+      }
+
+      h1 {
+        font-size: 3.2rem;
+        color: var(--amarelo);
+        font-weight: 700;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+        letter-spacing: 6px;
+        text-shadow: 0 0 12px var(--amarelo);
+      }
+
+      p, .agradecimento {
+        font-size: 1.5rem;
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+
+      .agradecimento {
+        font-weight: 700;
+        color: var(--laranja);
+        margin-top: 30px;
+        margin-bottom: 40px;
+      }
+
+      /* Botões principais */
+      .botoes {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        flex-wrap: wrap;
+      }
+
+      .botao-planilha, .botao-premiacoes {
+        background: var(--amarelo);
+        color: var(--preto);
+        font-weight: 700;
+        font-size: 1.2rem;
+        padding: 14px 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(255, 187, 0, 0.7);
+        text-decoration: none;
+        user-select: none;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: 
+          background-color var(--transition-speed),
+          box-shadow var(--transition-speed),
+          transform var(--transition-speed);
+        position: relative;
+      }
+
+      .botao-planilha:hover,
+      .botao-premiacoes:hover,
+      .botao-planilha:focus,
+      .botao-premiacoes:focus {
+        background: var(--amarelo-escuro);
+        box-shadow: 0 8px 25px rgba(204, 136, 0, 0.9);
+        outline: none;
+        transform: translateY(-3px);
+      }
+
+      /* Tooltip personalizada para botões */
+      .botao-planilha[aria-describedby],
+      .botao-premiacoes[aria-describedby] {
+        position: relative;
+      }
+      .tooltip {
+        display: none;
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--amarelo);
+        color: var(--preto);
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 700;
+        white-space: nowrap;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        pointer-events: none;
+        user-select: none;
+        z-index: 200;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .botao-planilha:hover .tooltip,
+      .botao-premiacoes:hover .tooltip,
+      .botao-planilha:focus .tooltip,
+      .botao-premiacoes:focus .tooltip {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Timer fixo no topo */
+      .timer-message {
+        position: fixed;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.6rem;
+        color: var(--branco);
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 8px;
+        padding: 12px 20px;
+        border: 2px solid var(--amarelo);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        user-select: none;
+      }
+      .timer-message.critical {
+        background-color: rgba(255, 0, 0, 0.85);
+        color: yellow;
+        border-color: yellow;
+        animation: pulse 1s infinite alternate;
+      }
+      @keyframes pulse {
+        0% { transform: translateX(-50%) scale(1); }
+        100% { transform: translateX(-50%) scale(1.05); }
+      }
+
+      /* Timer ícone */
+      .timer-message #icon {
+        width: 36px;
+        height: 36px;
+        background-image: url('https://cidadealtarp.com/favicon.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: fadeInOut 4s ease-in-out infinite;
+      }
+
+      /* Responsividade */
+      @media (max-width: 600px) {
         h1 {
-            font-size: 3em; /* Antes 2.5em */
-            color: #ffbb00;
-            font-weight: bold;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: 5px;
+          font-size: 2.4rem;
+          letter-spacing: 3px;
         }
-
-        p {
-            font-size: 3em; /* Antes 1.3em */
-            margin-bottom: 20px;
-            line-height: 1.6;
-            color: #ffffff; /* Cor do texto */
+        p, .agradecimento {
+          font-size: 1.2rem;
         }
-
-        .agradecimento {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ff6600; /* Nova cor para "Cidade Alta, Razor e Tony" */
-            margin-top: 30px;
-            margin-bottom: 20px;
-        }
-
         .botoes {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 40px;
+          flex-direction: column;
+          gap: 15px;
+          width: 100%;
         }
-
         .botao-planilha, .botao-premiacoes {
-            padding: 12px 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-decoration: none;
-            color: black;
-            background: #ffbb00;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #ffbb00;
-            transition: all 0.3s ease-in-out;
+          width: 100%;
+          justify-content: center;
+          padding: 12px 0;
+          font-size: 1.1rem;
         }
-
-        .botao-planilha:hover, .botao-premiacoes:hover {
-            background: #cc8800;
-            box-shadow: 0 0 15px #cc8800;
-        }
-
-        .negrito-preto {
-            font-weight: 900; /* Máximo de negrito */
-            color: #000000; /* Preto absoluto */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9); /* Sombra preta para intensificar */
-        }
-
-        .negrito-dourado {
-            font-weight: 800; /* Máximo de negrito */
-            color: #ffbb00; /* Preto absoluto */
-            text-shadow: 1px 1px 2px #f1bb27; /* Sombra preta para intensificar */
-        }
-
-        #icon {
-            width: 40px;  /* Aumentado o tamanho para igualar ao do timer */
-            height: 40px;
-            background-image: url('https://cidadealtarp.com/favicon.svg');
-            background-size: cover;
-            opacity: 1;
-            animation: fadeInOut 4s ease-in-out infinite;
-            margin-right: 10px;  /* Distância ajustada entre o ícone e o texto */
-        }
-
-        @keyframes fadeInOut {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        /* Timer */
         .timer-message {
-            position: fixed;
-            top: 10px;
-            left: 50px;
-            font-size: 1.5em;
-            color: white;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 5px;
-            padding: 10px;
-            border: 2px solid #ffbb00;  /* Para garantir que o texto fique visível */
+          font-size: 1.2rem;
+          top: 50px;
         }
-
-        .timer-message span {
-            margin-left: 10px;
-        }
-
-        /* Garantir que o ícone e o texto tenham visibilidade no modo claro */
-        .light-mode .timer-message {
-            color: black;  /* Texto do timer visível no modo claro */
-            background-color: rgba(255, 255, 255, 0.8);  /* Fundo mais claro no modo claro */
-            border: 2px solid #ffbb00;
-        }
-
-        .dark-mode .timer-message {
-            color: white;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
+      }
     </style>
 </head>
-<body class="light-mode">
-    <button class="toggle-icon" onclick="toggleMode()">☀️</button>
-    <div id="timer-message" class="timer-message">
-        <div id="icon"></div>
-        <span id="time-display">00:02:00</span>
+<body class="light-mode" aria-live="polite" aria-label="Página de agradecimento da equipe de voluntários Cidade Alta">
+
+    <header role="banner" aria-label="Cabeçalho com logo e botão para alternar tema">
+        <div id="icon" aria-hidden="true"></div>
+        <button class="toggle-icon" aria-label="Alternar modo claro e escuro" aria-pressed="false" id="toggle-theme-btn" title="Alternar modo claro e escuro">☀️</button>
+    </header>
+
+    <div id="timer-message" class="timer-message" role="timer" aria-live="assertive" aria-atomic="true" aria-relevant="text">
+      <div id="icon" aria-hidden="true"></div>
+      <span id="time-display">02:00</span>
     </div>
-   <!-- Música local embutida (invisível) -->
-    <audio autoplay loop>
-        <source src="cda.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio HTML5.
-    </audio>
 
-
-    <div class="container">
-        <br>
-           <h1><strong class="negrito-dourado">Equipe de Voluntários</strong> <br></h1>
-            Razor e Pollo falando!
-            <br><br>
-                Queria começar agradecendo, de coração, por todo o empenho e força que vocês têm dado ao projeto nesses últimos três meses.<br>
-            É incrível ver o quanto cada um tem se dedicado, com vontade de aprender e de somar — isso faz toda a diferença pra gente continuar evoluindo.<br>
-            Não se trata só de números ou horas. É sobre estar presente, fazer parte, segurar na mão quando precisa e se jogar de verdade no que acredita.<br>
-            E é com base nisso que a gente enxerga quem tá junto: participação, comprometimento, proatividade... tudo isso conta.<br>
-            Existe um orgulho enorme em já ter passado pelo lugar de voluntário e, hoje, poder acompanhar de perto essa caminhada em equipe.<br>
-            É inspirador ver como as coisas têm acontecido — com verdade, com entrega e com parceria.<br>
-            Vamos continuar nessa pegada, porque é junto que tudo isso faz sentido. É junto que a gente faz acontecer.<br>
+    <main class="container" role="main">
+        <h1>Equipe de Voluntários</h1>
+        <p>Razor e Pollo falando!</p>
+        <p>
+          Queria começar agradecendo, de coração, por todo o empenho e força que vocês têm dado ao projeto nesses últimos três meses.<br>
+          É incrível ver o quanto cada um tem se dedicado, com vontade de aprender e de somar — isso faz toda a diferença pra gente continuar evoluindo.<br>
+          Não se trata só de números ou horas. É sobre estar presente, fazer parte, segurar na mão quando precisa e se jogar de verdade no que acredita.<br>
+          E é com base nisso que a gente enxerga quem tá junto: participação, comprometimento, proatividade... tudo isso conta.<br>
+          Existe um orgulho enorme em já ter passado pelo lugar de voluntário e, hoje, poder acompanhar de perto essa caminhada em equipe.<br>
+          É inspirador ver como as coisas têm acontecido — com verdade, com entrega e com parceria.<br>
+          Vamos continuar nessa pegada, porque é junto que tudo isso faz sentido. É junto que a gente faz acontecer.
+        </p>
         <p class="agradecimento">
-            <span class="negrito-dourado" style="color: #fca400; font-weight: bold;">Atenciosamente</span> <br><br>
-            <span style="color: #ffc24e; font-weight: bold;">[STAFF]Razor e [STAFF] Pollo</span> 
+          <span style="color: var(--laranja); font-weight: bold;">Atenciosamente</span><br><br>
+          <span style="color: var(--amarelo); font-weight: bold;">[STAFF]Razor e [STAFF] Pollo</span>
         </p>
 
-        <div class="botoes">
-            <a href="index.html" class="botao-premiacoes" target="_blank">Início</a>
-            <a href="https://discord.com/channels/1146816374463811634/1352036409812324372" class="botao-planilha" target="_blank">Bater ponto</a>
-            <a href="premiacoes.html" class="botao-premiacoes" target="_blank">Contagem de horas</a>
+        <nav class="botoes" role="navigation" aria-label="Links principais da página">
+            <a href="index.html" class="botao-premiacoes" role="button" aria-describedby="tooltip-home" tabindex="0">
+                Início
+                <span class="tooltip" id="tooltip-home" role="tooltip">Voltar para página inicial</span>
+            </a>
+            <a href="https://discord.com/channels/1146816374463811634/1352036409812324372" class="botao-planilha" role="button" aria-describedby="tooltip-ponto" tabindex="0">
+                Bater ponto
+                <span class="tooltip" id="tooltip-ponto" role="tooltip">Acesse o canal para marcar presença</span>
+            </a>
+            <a href="premiacoes.html" class="botao-premiacoes" role="button" aria-describedby="tooltip-horas" tabindex="0">
+                Contagem de horas
+                <span class="tooltip" id="tooltip-horas" role="tooltip">Veja a contagem mensal de horas</span>
+            </a>
+        </nav>
+    </main>
 
-        </div>
-    </div>
+    <!-- Sons para timer -->
+    <audio id="alert-sound" src="alerta.mp3" preload="auto"></audio>
 
-    <!-- dentro do <script>, no final do body -->
-<script>
-    let timeLeft = 120; // Importante: fora do onload!
+    <script>
+      // Tema toggle com localStorage e atributo aria-pressed
+      const body = document.body;
+      const toggleBtn = document.getElementById('toggle-theme-btn');
 
-    function setVolume() {
-        let iframe = document.getElementById("youtube-audio");
-        iframe?.contentWindow?.postMessage('{"event":"command","func":"setVolume","args":[20]}', '*');
-    }
-
-    function conectarServidor() {
-        window.open("fivem://connect/vddag5", "_blank");
-    }
-
-    setTimeout(setVolume, 2000); 
-
-    function toggleMode() {
-        const body = document.body;
-        const button = document.querySelector(".toggle-icon");
-        body.classList.toggle("dark-mode");
-        body.classList.toggle("light-mode");
-
-        const isDarkMode = body.classList.contains("dark-mode");
-        localStorage.setItem("theme", isDarkMode ? "dark" : "light");
-        button.textContent = isDarkMode ? "🌙" : "☀️";
-    }
-
-    window.onload = function() {
-        const savedTheme = localStorage.getItem("theme");
-        const body = document.body;
-        const button = document.querySelector(".toggle-icon");
-
-        if (savedTheme === "light") {
-            body.classList.add("light-mode");
-            button.textContent = "☀️";
+      function applyTheme(theme) {
+        if(theme === 'dark') {
+          body.classList.add('dark-mode');
+          body.classList.remove('light-mode');
+          toggleBtn.textContent = '🌙';
+          toggleBtn.setAttribute('aria-pressed', 'true');
         } else {
-            body.classList.add("dark-mode");
-            button.textContent = "🌙";
+          body.classList.add('light-mode');
+          body.classList.remove('dark-mode');
+          toggleBtn.textContent = '☀️';
+          toggleBtn.setAttribute('aria-pressed', 'false');
+        }
+        localStorage.setItem('theme', theme);
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        const current = body.classList.contains('dark-mode') ? 'dark' : 'light';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+
+      // Aplica tema salvo
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      applyTheme(savedTheme);
+
+      // Timer regressivo
+      let timeLeft = 120;
+      const timerMessage = document.getElementById('timer-message');
+      const timeDisplay = document.getElementById('time-display');
+      const alertSound = document.getElementById('alert-sound');
+
+      function formatTime(seconds) {
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      }
+
+      const countdown = setInterval(() => {
+        timeLeft--;
+        timeDisplay.textContent = formatTime(timeLeft);
+
+        // Aplica estilo crítico e toca som nos últimos 10 segundos
+        if(timeLeft <= 10 && timeLeft > 0) {
+          timerMessage.classList.add('critical');
+          alertSound.play().catch(() => {});
         }
 
-        const timerMessage = document.getElementById("timer-message");
-        const timeDisplay = document.getElementById("time-display");
-
-        timerMessage.style.display = "flex";
-
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        if(timeLeft <= 0) {
+          clearInterval(countdown);
+          timeDisplay.textContent = "00:00";
+          timerMessage.textContent = "Redirecionando...";
+          setTimeout(() => {
+            window.location.href = "https://cidadealta.gg";
+          }, 5000);
         }
-
-        const countdown = setInterval(() => {
-            timeLeft--;
-
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-
-                let secondTimer = 20;
-                timeDisplay.textContent = "00:20";
-                const textInfo = document.createElement("span");
-                textInfo.textContent = " - Você será redirecionado em breve...";
-                timerMessage.appendChild(textInfo);
-
-                const secondCountdown = setInterval(() => {
-                    secondTimer--;
-                    timeDisplay.textContent = `00:${String(secondTimer).padStart(2, '0')}`;
-
-                    if (secondTimer <= 0) {
-                        clearInterval(secondCountdown);
-                        window.location.href = "https://cidadealta.gg";
-                    }
-                }, 1000);
-            } else {
-                timeDisplay.textContent = formatTime(timeLeft);
-            }
-        }, 1000);
-    };
-</script>
+      }, 1000);
+    </script>
 
 </body>
 </html>

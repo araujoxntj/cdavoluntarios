@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" >
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,7 +19,6 @@
     --transition-speed: 0.3s;
   }
 
-  /* Reset */
   * {
     margin: 0; padding: 0; box-sizing: border-box;
   }
@@ -29,20 +28,22 @@
     min-height: 100vh;
     background: var(--preto);
     color: var(--branco);
-    display: flex;
-    justify-content: center;
     padding: 60px 20px 40px;
     transition: background var(--transition-speed), color var(--transition-speed);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .container {
+  main.container {
     max-width: 900px;
     width: 100%;
     background: rgba(30,30,30,0.85);
     border-radius: 20px;
-    padding: 40px 30px;
+    padding: 40px 30px 80px; /* bottom maior para não esconder conteúdo com o form fixo */
     box-shadow: 0 10px 25px rgba(0,0,0,0.7);
     transition: background var(--transition-speed), color var(--transition-speed);
+    position: relative;
   }
 
   h1 {
@@ -52,6 +53,85 @@
     margin-bottom: 40px;
     color: var(--amarelo);
     text-shadow: 0 0 12px var(--amarelo);
+  }
+
+  /* FIXADOS NO TOPO - ESQUERDA */
+  .top-left-bar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 9999;
+    background: rgba(30,30,30,0.85);
+    padding: 10px 20px;
+    border-radius: 14px;
+    box-shadow: 0 0 15px var(--amarelo);
+  }
+
+  .top-left-bar input[type="search"] {
+    font-size: 1rem;
+    padding: 8px 12px;
+    border-radius: 14px;
+    border: none;
+    width: 180px;
+    background: var(--cinza-escuro);
+    color: var(--branco);
+    box-shadow: 0 0 10px rgba(255,187,0,0.6);
+    transition: box-shadow 0.3s ease;
+  }
+  .top-left-bar input[type="search"]:focus {
+    outline: none;
+    box-shadow: 0 0 15px var(--amarelo);
+  }
+
+  .top-left-bar button#toggle-lang {
+    background: var(--amarelo);
+    border: none;
+    border-radius: 14px;
+    padding: 8px 16px;
+    font-weight: 600;
+    color: var(--preto);
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 6px 15px rgba(255,187,0,0.7);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .top-left-bar button#toggle-lang:hover,
+  .top-left-bar button#toggle-lang:focus {
+    background: var(--amarelo-escuro);
+    box-shadow: 0 8px 25px rgba(204,136,0,0.9);
+    outline: none;
+    transform: translateY(-3px);
+  }
+
+  /* Botão música fixado canto superior direito */
+  button#musicToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--amarelo);
+    color: var(--preto);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 14px;
+    box-shadow: 0 6px 15px rgba(255,187,0,0.7);
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 9999;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  button#musicToggle:hover, button#musicToggle:focus {
+    background: var(--amarelo-escuro);
+    box-shadow: 0 8px 25px rgba(204,136,0,0.9);
+    outline: none;
+    transform: translateY(-3px);
   }
 
   /* Cards Grid */
@@ -66,13 +146,26 @@
     border-radius: 14px;
     padding: 24px 20px;
     box-shadow: 0 4px 10px rgba(255, 187, 0, 0.2);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.5s ease;
     cursor: default;
+    position: relative;
+    opacity: 1;
+    transform-origin: center;
+  }
+
+  /* animação fade-in scale */
+  .card.hide {
+    opacity: 0;
+    transform: scale(0.9);
+    pointer-events: none;
+    height: 0;
+    margin: 0;
+    padding: 0;
   }
 
   .card:hover {
     box-shadow: 0 12px 30px rgba(255, 187, 0, 0.7);
-    transform: translateY(-6px);
+    transform: translateY(-6px) scale(1.05);
   }
 
   .card h2 {
@@ -89,21 +182,55 @@
     color: inherit;
   }
 
-  .premiacoes {
-    font-weight: 600;
-    font-size: 1.15rem;
-    color: var(--amarelo);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  /* Destaque para top 3 */
+  .top1 {
+    border: 3px solid gold;
+    box-shadow: 0 0 15px gold;
+  }
+  .top2 {
+    border: 3px solid silver;
+    box-shadow: 0 0 12px silver;
+  }
+  .top3 {
+    border: 3px solid #cd7f32; /* bronze */
+    box-shadow: 0 0 12px #cd7f32;
   }
 
-  /* Botões */
+  /* Tooltip personalizada */
+  .card[title] {
+    position: relative;
+  }
+  .card[title]:hover::after,
+  .card[title]:focus::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 187, 0, 0.9);
+    color: var(--preto);
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 100;
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .card[title]::after {
+    opacity: 0;
+  }
+
+  /* Botões principais (abaixo da lista) */
   .botoes {
     margin-top: 50px;
     display: flex;
     justify-content: center;
     gap: 30px;
+    flex-wrap: wrap;
   }
 
   .botao-planilha, .botao-premiacoes {
@@ -117,6 +244,11 @@
     text-decoration: none;
     transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
     user-select: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .botao-planilha:hover, .botao-premiacoes:hover,
@@ -128,92 +260,308 @@
   }
 
   /* Responsividade */
-  @media (max-width: 600px) {
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 30px;
+  @media (max-width: 700px) {
+    /* Top left bar vira vertical para caber */
+    .top-left-bar {
+      flex-direction: column;
+      gap: 10px;
+      width: 220px;
+      padding: 15px 20px;
     }
-    .card {
-      padding: 18px 16px;
+    .top-left-bar input[type="search"] {
+      width: 100%;
     }
-    .card h2 {
-      font-size: 1.4rem;
-    }
-    .botao-planilha, .botao-premiacoes {
-      font-size: 1rem;
-      padding: 12px 20px;
+    /* Música no topo direita menor */
+    button#musicToggle {
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      top: 15px;
+      right: 15px;
     }
   }
-
 </style>
 </head>
 <body aria-live="polite" aria-label="Ranking de voluntários Cidade Alta">
 
-  <main class="container" role="main">
-    <h1>Contagem de horas mensal</h1>
+  <!-- Barra fixa no topo esquerda: busca + troca idioma -->
+  <div class="top-left-bar" role="region" aria-label="Barra de busca e seleção de idioma">
+    <input type="search" id="searchInput" aria-label="Buscar voluntário pelo nome" placeholder="Buscar voluntário..." data-i18n-placeholder="searchPlaceholder" />
+    <button id="toggle-lang" aria-pressed="false" aria-label="Alternar idioma">Inglês</button>
+  </div>
 
-    <section class="cards" aria-label="Lista de voluntários com informações detalhadas">
-  <article class="card" tabindex="0">
-    <h2>🥇 Neto</h2>
-    <p>🕰️ Horas: 272</p>
-    <p>💎 Diamantes: 37.020</p>
-  </article>
+  
+  <!-- Botão música fixo no canto superior direito -->
+  <button class="botao-music" id="musicToggle" aria-pressed="false" aria-label="Ativar ou desativar música">
+    🔈 <span data-i18n="btnMusicOn">Ativar música</span>
+  </button>
 
-  <article class="card" tabindex="0">
-    <h2>🥈 Melão</h2>
-    <p>🕰️ Horas: 63</p>
-    <p>💎 Diamantes: 13.500</p>
-  </article>
+  <audio id="backgroundMusic" loop autoplay>
+  <source src="video/cda4.mp3" type="audio/mp3" />
+</audio>
 
-  <article class="card" tabindex="0">
-    <h2>🥉Castro </h2>
-    <p>🕰️ Horas: 61</p>
-    <p>💎 Diamantes: 11.810</p>
-  </article>
+  <main class="container" role="main" tabindex="-1">
+    <h1 data-i18n="title">Contagem de horas mensal</h1>
 
-  <article class="card" tabindex="0">
-    <h2>Eni</h2>
-    <p>🕰️ Horas: 56</p>
-    <p>💎 Diamantes: 10.670</p>
-  </article>
+    <!-- Lista de voluntários -->
+    <section class="cards" aria-label="Lista de voluntários com informações detalhadas" id="volunteerList">
+      <!-- Cards via JS -->
+    </section>
 
-  <article class="card" tabindex="0">
-    <h2>Portuga</h2>
-    <p>🕰️ Horas: 45</p>
-    <p>💎 Diamantes: 9.780</p>
-  </article>
-
-  <article class="card" tabindex="0">
-    <h2>Domi</h2>
-    <p>🕰️ Horas: 43</p>
-    <p>💎 Diamantes: 10.050</p>
-  </article>
-
-  <article class="card" tabindex="0">
-    <h2>Dan</h2>
-    <p>🕰️ Horas: 26</p>
-    <p>💎 Diamantes: 6.190</p>
-  </article>
-
-  <article class="card" tabindex="0">
-    <h2>Vinicius</h2>
-    <p>🕰️ Horas: 21</p>
-    <p>💎 Diamantes: 7.800</p>
-  </article>
-</section>
-
-
+    <!-- Botões principais -->
     <section class="botoes" aria-label="Botões para acessar planilhas e tabela de premiações">
-      <a href="index.html" target="_blank" rel="noopener noreferrer" class="botao-planilha" role="button" aria-label="Abrir planilha de voluntários">
-        Página inicial
-      </a>
-      <a href="agradecimento.html" target="_blank" rel="noopener noreferrer" class="botao-premiacoes" role="button" aria-label="Abrir tabela de premiações">
-        Agradecimento
-      </a>
+      <a href="index.html" target="_blank" rel="noopener noreferrer" class="botao-planilha" role="button" aria-label="Abrir página inicial" data-i18n="btnHome">Página inicial</a>
+      <a href="agradecimento.html" target="_blank" rel="noopener noreferrer" class="botao-premiacoes" role="button" aria-label="Abrir página de agradecimento" data-i18n="btnThanks">Agradecimento</a>
     </section>
   </main>
 
+  <audio id="backgroundMusic" loop src="https://cdn.pixabay.com/download/audio/2021/10/23/audio_9a62fa93a1.mp3?filename=happy-upbeat-joyful-11737.mp3" preload="auto"></audio>
+
+<script>
+  const volunteersData = [
+    {
+      id: 'neto',
+      pt: {
+        name: 'Neto',
+        title: 'Neto é o voluntário com maior dedicação e diamantes acumulados.',
+        hours: 272,
+        diamonds: 37020,
+        medal: '🥇',
+      },
+      en: {
+        name: 'Neto',
+        title: 'Neto is the volunteer with the highest dedication and diamonds collected.',
+        hours: 272,
+        diamonds: 37020,
+        medal: '🥇',
+      }
+    },
+    {
+      id: 'melao',
+      pt: {
+        name: 'Melão',
+        title: 'Melão, segundo colocado, com boa participação.',
+        hours: 63,
+        diamonds: 13500,
+        medal: '🥈',
+      },
+      en: {
+        name: 'Melao',
+        title: 'Melao, second place with good participation.',
+        hours: 63,
+        diamonds: 13500,
+        medal: '🥈',
+      }
+    },
+    {
+      id: 'castro',
+      pt: {
+        name: 'Castro',
+        title: 'Castro conquistou o terceiro lugar com dedicação consistente.',
+        hours: 61,
+        diamonds: 11810,
+        medal: '🥉',
+      },
+      en: {
+        name: 'Castro',
+        title: 'Castro conquered third place with consistent dedication.',
+        hours: 61,
+        diamonds: 11810,
+        medal: '🥉',
+      }
+    },
+    {
+      id: 'eni',
+      pt: {
+        name: 'Eni',
+        title: 'Eni com ótima participação no mês.',
+        hours: 56,
+        diamonds: 10670,
+        medal: '',
+      },
+      en: {
+        name: 'Eni',
+        title: 'Eni with great participation this month.',
+        hours: 56,
+        diamonds: 10670,
+        medal: '',
+      }
+    },
+    {
+      id: 'portuga',
+      pt: {
+        name: 'Portuga',
+        title: 'Portuga, sempre presente e dedicado.',
+        hours: 45,
+        diamonds: 9780,
+        medal: '',
+      },
+      en: {
+        name: 'Portuga',
+        title: 'Portuga, always present and dedicated.',
+        hours: 45,
+        diamonds: 9780,
+        medal: '',
+      }
+    },
+    {
+      id: 'domi',
+      pt: {
+        name: 'Domi',
+        title: 'Domi com participação ativa.',
+        hours: 43,
+        diamonds: 10050,
+        medal: '',
+      },
+      en: {
+        name: 'Domi',
+        title: 'Domi with active participation.',
+        hours: 43,
+        diamonds: 10050,
+        medal: '',
+      }
+    },
+    {
+      id: 'dan',
+      pt: {
+        name: 'Dan',
+        title: 'Dan fez uma boa contribuição.',
+        hours: 26,
+        diamonds: 6190,
+        medal: '',
+      },
+      en: {
+        name: 'Dan',
+        title: 'Dan made a good contribution.',
+        hours: 26,
+        diamonds: 6190,
+        medal: '',
+      }
+    },
+    {
+      id: 'vinicius',
+      pt: {
+        name: 'Vinicius',
+        title: 'Vinicius participou regularmente.',
+        hours: 21,
+        diamonds: 7800,
+        medal: '',
+      },
+      en: {
+        name: 'Vinicius',
+        title: 'Vinicius participated regularly.',
+        hours: 21,
+        diamonds: 7800,
+        medal: '',
+      }
+    },
+  ];
+
+  const translations = {
+    pt: {
+      title: "Contagem de horas mensal",
+      searchPlaceholder: "Buscar voluntário...",
+      btnHome: "Página inicial",
+      btnThanks: "Agradecimento",
+      btnMusicOn: "Ativar música",
+      btnMusicOff: "Desativar música",
+    },
+    en: {
+      title: "Monthly Hours Count",
+      searchPlaceholder: "Search volunteer...",
+      btnHome: "Home page",
+      btnThanks: "Thank you",
+      btnMusicOn: "Turn music on",
+      btnMusicOff: "Turn music off",
+    }
+  };
+
+  let currentLang = 'pt';
+
+  function renderCards(filter = '') {
+    const listEl = document.getElementById('volunteerList');
+    listEl.innerHTML = '';
+
+    let filteredVolunteers = volunteersData.filter(v => {
+      const name = v[currentLang].name.toLowerCase();
+      return name.includes(filter.toLowerCase());
+    });
+
+    filteredVolunteers.forEach((v, idx) => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      if (idx === 0) card.classList.add('top1');
+      else if (idx === 1) card.classList.add('top2');
+      else if (idx === 2) card.classList.add('top3');
+
+      card.tabIndex = 0;
+      card.title = v[currentLang].title;
+
+      card.innerHTML = `
+        <h2>${v[currentLang].medal ? v[currentLang].medal + ' ' : ''}${v[currentLang].name}</h2>
+        <p>🕰️ ${v[currentLang].hours} ${currentLang === 'pt' ? 'Horas' : 'Hours'}</p>
+        <p>💎 ${v[currentLang].diamonds.toLocaleString()} ${currentLang === 'pt' ? 'Diamantes' : 'Diamonds'}</p>
+      `;
+
+      listEl.appendChild(card);
+    });
+  }
+
+  // Busca e filtro
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', e => {
+    renderCards(e.target.value);
+  });
+
+  // Botão toggle música
+  const musicBtn = document.getElementById('musicToggle');
+  const music = document.getElementById('backgroundMusic');
+
+  musicBtn.addEventListener('click', () => {
+    if (music.paused) {
+      music.play();
+      musicBtn.setAttribute('aria-pressed', 'true');
+      musicBtn.querySelector('span').textContent = translations[currentLang].btnMusicOff;
+      musicBtn.textContent = '🔊 ';
+      musicBtn.appendChild(document.createElement('span')).textContent = translations[currentLang].btnMusicOff;
+    } else {
+      music.pause();
+      musicBtn.setAttribute('aria-pressed', 'false');
+      musicBtn.querySelector('span').textContent = translations[currentLang].btnMusicOn;
+      musicBtn.textContent = '🔈 ';
+      musicBtn.appendChild(document.createElement('span')).textContent = translations[currentLang].btnMusicOn;
+    }
+  });
+
+  // Botão toggle idioma
+  const toggleLangBtn = document.getElementById('toggle-lang');
+  toggleLangBtn.addEventListener('click', () => {
+    currentLang = currentLang === 'pt' ? 'en' : 'pt';
+
+    // Atualizar textos
+    document.querySelector('h1').textContent = translations[currentLang].title;
+    searchInput.placeholder = translations[currentLang].searchPlaceholder;
+
+    document.querySelector('.botao-planilha').textContent = translations[currentLang].btnHome;
+    document.querySelector('.botao-premiacoes').textContent = translations[currentLang].btnThanks;
+
+    // Atualizar botão idioma
+    toggleLangBtn.textContent = currentLang === 'pt' ? 'Inglês' : 'Português';
+    toggleLangBtn.setAttribute('aria-pressed', currentLang === 'en');
+
+    // Atualizar botão música texto
+    if (music.paused) {
+      musicBtn.querySelector('span').textContent = translations[currentLang].btnMusicOn;
+    } else {
+      musicBtn.querySelector('span').textContent = translations[currentLang].btnMusicOff;
+    }
+
+    renderCards(searchInput.value);
+  });
+
+  // Inicializa
+  renderCards();
+
+</script>
+
 </body>
 </html>
-<!--   <audio id="hidden-audio" autoplay loop>
- -->    
