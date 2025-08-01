@@ -319,7 +319,7 @@
 <script>
 
 // Ajuste aqui para ativar/desativar a manutenção (pode vir de API/config)
-  let manutencaoAtiva = true;
+  let manutencaoAtiva = false;
 
   // Verifica se o usuário já viu que a manutenção acabou
   const manutencaoFinalizada = localStorage.getItem('manutencaoFinalizada') === 'true';
@@ -332,8 +332,19 @@
   if (manutencaoAtiva) {
     const path = window.location.pathname;
 
-   
- 
+    // Permite ficar só na página raiz (manutenção)
+    if (path !== 'premiacoes.html' && !path.endsWith('premiacoes.html')) {
+      window.location.href = '/';
+    }
+  }
+
+  // Função para chamar quando a manutenção acabar (exemplo: no timer da página index)
+  function finalizarManutencao() {
+    localStorage.setItem('manutencaoFinalizada', 'true');
+    manutencaoAtiva = false;
+    // Redireciona para a página inicial real após liberar o site
+    window.location.href = '/premiacoes.html';
+  }
 
   const volunteersData = [
   {
