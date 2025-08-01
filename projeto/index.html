@@ -1,97 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <script src="js/checkManutencao.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cidade Alta</title>
   <link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/svg+xml" />
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet" />
   <style>
-    html, body {
-      margin: 0; padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Comfortaa', sans-serif;
-    }
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Comfortaa', sans-serif;
+    background: black;
+  }
 
-    #video-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-      overflow: hidden;
-    }
+  #manutencao, #conteudoSite {
+    display: none;
+    height: 100%;
+  }
 
-    #video-bg video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.7);
-    }
+  #video-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
 
-    .conteudo {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      color: white;
-      z-index: 10;
-      width: 100%;
-    }
+  #video-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.3);
+  }
 
-    .botoes {
-      margin-top: 10px;
-      justify-content: center;
-      display: flex;
-      gap: 20px;
-    }
+  .conteudo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    color: white;
+  }
 
-    .botao {
-      padding: 12px 24px;
-      font-size: 1.5em;
-      font-weight: bold;
-      color: black;
-      background: #ffbb00;
-      border: none;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 0 10px #ffbb00;
-    }
+  .logo {
+    width: 100px;
+    margin-bottom: 20px;
+    animation: appearZoom 1.5s ease-out forwards;
+    z-index: 11;
+    position: relative;
+  }
 
-    .botao:hover {
-      background: #cc8800;
-      box-shadow: 0 0 15px #cc8800;
-    }
+  .contador {
+    font-size: 2em;
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px 30px;
+    border-radius: 10px;
+    display: inline-block;
+    color: #ffbb00;
+    font-weight: bold;
+    animation: pulse 1s infinite;
+  }
 
-    #toggle-sound {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 20;
-      padding: 10px 20px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-  </style>
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes appearZoom {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  #btn-som, #toggle-sound {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background-color: #222;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 1.1em;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+  }
+
+  #btn-som:hover, #toggle-sound:hover {
+    background-color: #444;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+  }
+
+  .botoes {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .botao {
+    padding: 12px 24px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: black;
+    background: #ffbb00;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #ffbb00;
+  }
+
+  .botao:hover {
+    background: #cc8800;
+    box-shadow: 0 0 15px #cc8800;
+  }
+</style>
+
 </head>
 <body>
 
-  <video autoplay loop muted playsinline webkit-playsinline preload="auto">
-  <source src="/video/cda2.mp4" type="video/mp4" />
-  Seu navegador não suporta a tag de vídeo.
-</video>
+<!-- 🔧 Modo Manutenção -->
+<div id="manutencao">
+  <div id="video-bg">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="video/cda2.mp4" type="video/mp4" />
+    </video>
+  </div>
 
+  <audio id="musica" loop autoplay muted>
+    <source src="video/cda3.mp3" type="audio/mp3" />
+  </audio>
+
+  <button id="btn-som" onclick="ativarSom()">Ativar Som</button>
 
   <div class="conteudo">
+    <img src="https://cidadealtarp.com/favicon.svg" class="logo" alt="Logo Cidade Alta" />
+    <h1>Estamos em manutenção</h1>
+    <p>Contagem de horas, chamados e diamantes sendo feita</p>
+    <div class="contador" id="contador">--:--:--</div>
+  </div>
+</div>
+
+<!-- 🌐 Conteúdo principal do site -->
+<div id="conteudoSite">
+  <video autoplay loop muted playsinline preload="auto">
+    <source src="video/cda2.mp4" type="video/mp4" />
+  </video>
+
+  <div class="conteudo" style="bottom: 80px; top: auto;">
     <h1>Cidade Alta - Voluntários</h1>
     <div class="botoes">
       <a href="premiacoes.html" class="botao">Premiações</a>
@@ -99,23 +165,73 @@
     </div>
   </div>
 
-  <!-- Música do YouTube (embed invisível) -->
   <iframe id="youtube-audio" width="0" height="0" 
     src="https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=1&controls=0&loop=1&playlist=NgJJo7lLAuI" 
     frameborder="0" allow="autoplay; encrypted-media"></iframe>
 
   <button id="toggle-sound">Ativar Som</button>
+</div>
 
-  <script>
-    const iframe = document.getElementById('youtube-audio');
-    const btn = document.getElementById('toggle-sound');
+<script>
+  const manutencaoAtiva = true; // ✅ Continua sendo usado no início
+  const agora = new Date();
+  const fimManutencao = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 21, 0, 0).getTime();
+  let tempoRestanteInicial = Math.floor((fimManutencao - agora.getTime()) / 1000);
+  if (tempoRestanteInicial < 0) tempoRestanteInicial = 0;
 
-    btn.addEventListener('click', () => {
+
+  function mostrarConteudoSite() {
+    document.getElementById('manutencao').style.display = 'none';
+    document.getElementById('conteudoSite').style.display = 'block';
+  }
+
+  if (manutencaoAtiva) {
+    document.getElementById('manutencao').style.display = 'block';
+    let tempoRestante = tempoRestanteInicial;
+
+    function atualizarContador() {
+      const contador = document.getElementById("contador");
+      const h = String(Math.floor(tempoRestante / 3600)).padStart(2, '0');
+      const m = String(Math.floor((tempoRestante % 3600) / 60)).padStart(2, '0');
+      const s = String(tempoRestante % 60).padStart(2, '0');
+      contador.textContent = `${h}:${m}:${s}`;
+
+      if (tempoRestante > 0) {
+        tempoRestante--;
+        setTimeout(atualizarContador, 1000);
+      } else {
+        mostrarConteudoSite();
+      }
+    }
+
+    atualizarContador();
+  } else {
+    mostrarConteudoSite();
+  }
+
+  function ativarSom() {
+    const audio = document.getElementById('musica');
+    audio.muted = false;
+    audio.play();
+
+    const btn = document.getElementById('btn-som');
+    btn.disabled = true;
+    btn.innerText = 'Som ativado';
+    btn.style.cursor = 'default';
+    btn.style.opacity = '0.7';
+  }
+
+  const btnSound = document.getElementById('toggle-sound');
+  if (btnSound) {
+    btnSound.addEventListener('click', () => {
+      const iframe = document.getElementById('youtube-audio');
       iframe.src = "https://www.youtube.com/embed/NgJJo7lLAuI?autoplay=1&mute=0&controls=0&loop=1&playlist=NgJJo7lLAuI";
-      btn.disabled = true;
-      btn.textContent = 'Som ativado';
+      btnSound.disabled = true;
+      btnSound.textContent = 'Som ativado';
     });
-  </script>
+  }
+</script>
+
 
 </body>
 </html>
