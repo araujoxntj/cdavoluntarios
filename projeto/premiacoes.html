@@ -332,19 +332,8 @@
   if (manutencaoAtiva) {
     const path = window.location.pathname;
 
-    // Permite ficar só na página raiz (manutenção)
-    if (path !== 'premiacoes.html' && !path.endsWith('premiacoes.html')) {
-      window.location.href = '/';
-    }
-  }
-
-  // Função para chamar quando a manutenção acabar (exemplo: no timer da página index)
-  function finalizarManutencao() {
-    localStorage.setItem('manutencaoFinalizada', 'true');
-    manutencaoAtiva = false;
-    // Redireciona para a página inicial real após liberar o site
-    window.location.href = '/index.html';
-  }
+   
+ 
 
   const volunteersData = [
   {
