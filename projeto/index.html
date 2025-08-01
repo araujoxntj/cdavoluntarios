@@ -229,7 +229,7 @@
 <script>
   const manutencaoAtiva = true; // controle se o modo manutenção está ativo
   const agora = new Date();
-  const fimManutencao = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 15, 30, 00).getTime();
+  const fimManutencao = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 21, 30, 50).getTime();
   let tempoRestanteInicial = Math.floor((fimManutencao - agora.getTime()) / 1000);
   if (tempoRestanteInicial < 0) tempoRestanteInicial = 0;
 
