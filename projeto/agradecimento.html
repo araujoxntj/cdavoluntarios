@@ -125,6 +125,7 @@
         text-transform: uppercase;
         letter-spacing: 6px;
         text-shadow: 0 0 12px var(--amarelo);
+        text-align: center;
       }
 
       p, .agradecimento {
@@ -138,6 +139,8 @@
         color: var(--laranja);
         margin-top: 30px;
         margin-bottom: 40px;
+        text-align: center;
+
       }
 
       /* Botões principais */
@@ -180,46 +183,11 @@
         transform: translateY(-3px);
       }
 
-      /* Tooltip personalizada para botões */
-      .botao-planilha[aria-describedby],
-      .botao-premiacoes[aria-describedby] {
-        position: relative;
-      }
-      .tooltip {
-        display: none;
-        position: absolute;
-        bottom: 125%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--amarelo);
-        color: var(--preto);
-        padding: 8px 14px;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 700;
-        white-space: nowrap;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        pointer-events: none;
-        user-select: none;
-        z-index: 200;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      .botao-planilha:hover .tooltip,
-      .botao-premiacoes:hover .tooltip,
-      .botao-planilha:focus .tooltip,
-      .botao-premiacoes:focus .tooltip {
-        display: block;
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      /* Timer fixo no topo */
+      /* Timer dentro do header */
       .timer-message {
-        position: fixed;
-        top: 60px;
+         position: absolute;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(-50%); /* Centraliza o timer horizontalmente */
         font-size: 1.6rem;
         color: var(--branco);
         background-color: rgba(0, 0, 0, 0.7);
@@ -233,16 +201,6 @@
         transition: background-color 0.3s ease, color 0.3s ease;
         user-select: none;
       }
-      .timer-message.critical {
-        background-color: rgba(255, 0, 0, 0.85);
-        color: yellow;
-        border-color: yellow;
-        animation: pulse 1s infinite alternate;
-      }
-      @keyframes pulse {
-        0% { transform: translateX(-50%) scale(1); }
-        100% { transform: translateX(-50%) scale(1.05); }
-      }
 
       /* Timer ícone */
       .timer-message #icon {
@@ -254,31 +212,6 @@
         animation: fadeInOut 4s ease-in-out infinite;
       }
 
-      /* Responsividade */
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 2.4rem;
-          letter-spacing: 3px;
-        }
-        p, .agradecimento {
-          font-size: 1.2rem;
-        }
-        .botoes {
-          flex-direction: column;
-          gap: 15px;
-          width: 100%;
-        }
-        .botao-planilha, .botao-premiacoes {
-          width: 100%;
-          justify-content: center;
-          padding: 12px 0;
-          font-size: 1.1rem;
-        }
-        .timer-message {
-          font-size: 1.2rem;
-          top: 50px;
-        }
-      }
     </style>
 </head>
 <body class="light-mode" aria-live="polite" aria-label="Página de agradecimento da equipe de voluntários Cidade Alta">
@@ -286,12 +219,11 @@
     <header role="banner" aria-label="Cabeçalho com logo e botão para alternar tema">
         <div id="icon" aria-hidden="true"></div>
         <button class="toggle-icon" aria-label="Alternar modo claro e escuro" aria-pressed="false" id="toggle-theme-btn" title="Alternar modo claro e escuro">☀️</button>
+        <div id="timer-message" class="timer-message" role="timer" aria-live="assertive" aria-atomic="true" aria-relevant="text">
+          <div id="icon" aria-hidden="true"></div>
+          <span id="time-display">02:00</span>
+        </div>
     </header>
-
-    <div id="timer-message" class="timer-message" role="timer" aria-live="assertive" aria-atomic="true" aria-relevant="text">
-      <div id="icon" aria-hidden="true"></div>
-      <span id="time-display">02:00</span>
-    </div>
 
     <main class="container" role="main">
         <h1>Equipe de Voluntários</h1>
@@ -312,16 +244,13 @@
 
         <nav class="botoes" role="navigation" aria-label="Links principais da página">
             <a href="index.html" class="botao-premiacoes" role="button" aria-describedby="tooltip-home" tabindex="0">
-                Início
-                <span class="tooltip" id="tooltip-home" role="tooltip">Voltar para página inicial</span>
+                <span class="tooltip" id="tooltip-home" role="tooltip">Início</span>
             </a>
             <a href="https://discord.com/channels/1146816374463811634/1352036409812324372" class="botao-planilha" role="button" aria-describedby="tooltip-ponto" tabindex="0">
-                Bater ponto
-                <span class="tooltip" id="tooltip-ponto" role="tooltip">Acesse o canal para marcar presença</span>
+                <span class="tooltip" id="tooltip-ponto" role="tooltip">Bater ponto</span>
             </a>
             <a href="premiacoes.html" class="botao-premiacoes" role="button" aria-describedby="tooltip-horas" tabindex="0">
-                Contagem de horas
-                <span class="tooltip" id="tooltip-horas" role="tooltip">Veja a contagem mensal de horas</span>
+                <span class="tooltip" id="tooltip-horas" role="tooltip">Horas mensais</span>
             </a>
         </nav>
     </main>

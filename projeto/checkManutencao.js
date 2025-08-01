@@ -5,13 +5,18 @@
 
   // Se ainda está em manutenção e o usuário não esperou
   if (agora < fimManutencao && !jaEsperou) {
+    // Redireciona para a página de manutenção se não estiver nela
     if (!window.location.href.includes("manutencao.html")) {
-      window.location.href = "/manutencao.html";
+      window.location.href = "/manutencao.html";  // ou apenas "manutencao.html"
     }
   }
 
-  // Se o tempo acabou, libera acesso para sempre neste navegador
+  // Se a manutenção acabou, libera o acesso
   if (agora >= fimManutencao) {
     localStorage.setItem("manutencao_liberada", "true");
+    // Caso o usuário já tenha acessado a manutenção, libere o acesso ao site
+    if (window.location.href.includes("manutencao.html")) {
+      window.location.href = "/index.html";  // ou a URL principal do seu site
+    }
   }
 })();
