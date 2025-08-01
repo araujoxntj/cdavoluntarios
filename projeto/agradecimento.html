@@ -229,12 +229,12 @@
         <h1>Equipe de Voluntários</h1>
         <p>Razor e Pollo falando!</p>
         <p>
-          Queríamos começar agradecendo, de coração, por todo o empenho e força que vocês têm dado ao projeto nesses últimos três meses.<br>
-          É incrível ver o quanto cada um tem se dedicado, com vontade de aprender e de somar, isso faz toda a diferença pra gente continuar evoluindo.<br>
+          Queria começar agradecendo, de coração, por todo o empenho e força que vocês têm dado ao projeto nesses últimos três meses.<br>
+          É incrível ver o quanto cada um tem se dedicado, com vontade de aprender e de somar — isso faz toda a diferença pra gente continuar evoluindo.<br>
           Não se trata só de números ou horas. É sobre estar presente, fazer parte, segurar na mão quando precisa e se jogar de verdade no que acredita.<br>
           E é com base nisso que a gente enxerga quem tá junto: participação, comprometimento, proatividade... tudo isso conta.<br>
           Existe um orgulho enorme em já ter passado pelo lugar de voluntário e, hoje, poder acompanhar de perto essa caminhada em equipe.<br>
-          É inspirador ver como as coisas têm acontecido, com verdade, com entrega e com parceria.<br>
+          É inspirador ver como as coisas têm acontecido — com verdade, com entrega e com parceria.<br>
           Vamos continuar nessa pegada, porque é junto que tudo isso faz sentido. É junto que a gente faz acontecer.
         </p>
         <p class="agradecimento">
@@ -262,12 +262,12 @@
 
         const manutencaoAtiva = true; // ou pegue isso via API/config
 
-        if (manutencaoAtiva) {
-        // Se não estiver na página index.html (modo conteúdo liberado), redireciona
-        if (!window.location.pathname.endsWith('agradecimento.html') && window.location.pathname !== '/') {
-            window.location.href = 'index.html';  // Ou direto para /manutencao.html, se tiver separado
-        }
-        }
+if (manutencaoAtiva) {
+  // Se não estiver na página index.html (modo conteúdo liberado), redireciona
+  if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/') {
+    window.location.href = '/';  // Ou direto para /manutencao.html, se tiver separado
+  }
+}
 
       // Tema toggle com localStorage e atributo aria-pressed
       const body = document.body;
