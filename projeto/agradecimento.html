@@ -260,14 +260,7 @@
 
     <script>
 
-        const manutencaoAtiva = true; // ou pegue isso via API/config
-
-        if (manutencaoAtiva) {
-        // Se não estiver na página index.html (modo conteúdo liberado), redireciona
-        if (!window.location.pathname.endsWith('agradecimento.html') && window.location.pathname !== '/') {
-            window.location.href = 'index.html';  // Ou direto para /manutencao.html, se tiver separado
-        }
-        }
+       
 
       // Tema toggle com localStorage e atributo aria-pressed
       const body = document.body;
