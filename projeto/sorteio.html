@@ -96,7 +96,6 @@ Centro</textarea>
 
 <script>
 const usuarios = { "Nitroz":"aguia", "Razor":"lobo", "Kiara":"grilo", "Mineiro":"raposa", "Pollo":"foca" };
-
 if(localStorage.getItem("logado") === "true") {
   document.getElementById("loginScreen").style.display="none";
   document.getElementById("mainContent").style.display="flex";
@@ -114,7 +113,7 @@ function verificarLogin(){
   }
 }
 
-let grupos=[], locais=[], grupoSelecionados=[];
+let todosGrupos=[], locais=[], gruposDisponiveis=[], grupoSelecionados=[];
 let ultimoSetorGrupo=-1, ultimoSetorLocal=-1;
 const notificacao=document.getElementById("notificacao");
 
@@ -125,27 +124,38 @@ function mostrarNotificacao(texto){
 }
 
 function atualizarBotoes() {
-  document.getElementById("btnSortearGrupo").disabled = grupos.length < 2 || grupoSelecionados.length === 2;
+  document.getElementById("btnSortearGrupo").disabled = grupoSelecionados.length===2 || gruposDisponiveis.length === 0;
 }
 
 function atualizarListas(){
-  grupos=document.getElementById("listaGrupos").value.split("\n").filter(x=>x.trim()!=="");
+  todosGrupos=document.getElementById("listaGrupos").value.split("\n").filter(x=>x.trim()!=="");
   locais=document.getElementById("listaLocais").value.split("\n").filter(x=>x.trim()!=="");
-  desenharRoleta("roleta",grupos);
-  desenharRoleta("roletaLocal",locais);
+  if(gruposDisponiveis.length===0) gruposDisponiveis = [...todosGrupos];
+  desenharRoleta("roleta", gruposDisponiveis);
+  desenharRoleta("roletaLocal", locais);
   atualizarBotoes();
 }
 
-function desenharRoleta(canvasId,itens,anguloInicio=0){
+function desenharRoleta(canvasId, itens, anguloInicio=0, destaque=-1){
   let canvas=document.getElementById(canvasId);
   let ctx=canvas.getContext("2d");
   let total=itens.length;
-  let angulo=2*Math.PI/total;
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if(total===0){
+    ctx.fillStyle="#e63946";
+    ctx.font="bold 24px Arial";
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    ctx.fillText("SEM GRUPOS", canvas.width/2, canvas.height/2);
+    return;
+  }
+
+  let angulo = 2*Math.PI/total;
   for(let i=0;i<total;i++){
     ctx.beginPath();
     ctx.moveTo(200,200);
-    ctx.fillStyle = i % 2 === 0 ? "#e63946" : "#fff";
+    ctx.fillStyle = (i===destaque) ? "#ffb703" : (i%2===0?"#e63946":"#fff");
     ctx.strokeStyle="#000"; ctx.lineWidth=2;
     ctx.arc(200,200,200,anguloInicio+i*angulo,anguloInicio+(i+1)*angulo);
     ctx.lineTo(200,200); ctx.fill(); ctx.stroke();
@@ -154,7 +164,7 @@ function desenharRoleta(canvasId,itens,anguloInicio=0){
     ctx.translate(200,200);
     ctx.rotate(anguloInicio+i*angulo+angulo/2);
     ctx.textAlign="right";
-    ctx.fillStyle = "#000";
+    ctx.fillStyle="#000";
     ctx.font="bold 16px Arial";
     ctx.fillText(itens[i],190,5);
     ctx.restore();
@@ -163,37 +173,49 @@ function desenharRoleta(canvasId,itens,anguloInicio=0){
 
 function tocarTick(){ let sound=document.getElementById("tickSound"); sound.currentTime=0; sound.play();}
 function tocarDing(){ let sound=document.getElementById("dingSound"); sound.currentTime=0; sound.play();}
-
 atualizarListas();
 
-function girarRoletaGrupo(){
-  if(grupos.length<2){ alert("Não há grupos suficientes!"); return; }
-  let anguloAtual=0, velocidade=Math.random()*0.3 + 0.3;
-  ultimoSetorGrupo=-1;
-  document.getElementById("grupoWrapper").style.pointerEvents="none";
+function girarRoletaGrupo() {
+  if (gruposDisponiveis.length === 0) { alert("Não há grupos suficientes!"); return; }
 
-  function animar(){
-    anguloAtual += velocidade; velocidade *= 0.97;
-    desenharRoleta("roleta", grupos, anguloAtual);
+  let anguloAtual = 0, velocidade = Math.random() * 0.3 + 0.3;
+  ultimoSetorGrupo = -1;
+  document.getElementById("grupoWrapper").style.pointerEvents = "none";
 
-    let indice = Math.floor((grupos.length - ((anguloAtual/(2*Math.PI)) * grupos.length) % grupos.length)) % grupos.length;
-    if(indice!==ultimoSetorGrupo){ tocarTick(); ultimoSetorGrupo=indice; }
+  function animar() {
+    anguloAtual += velocidade; 
+    velocidade *= 0.97;
+    let indice = Math.floor((gruposDisponiveis.length - ((anguloAtual / (2 * Math.PI)) * gruposDisponiveis.length) % gruposDisponiveis.length) % gruposDisponiveis.length);
+    desenharRoleta("roleta", gruposDisponiveis, anguloAtual, indice);
+    if (indice !== ultimoSetorGrupo) { tocarTick(); ultimoSetorGrupo = indice; }
 
-    if(velocidade>0.002) requestAnimationFrame(animar);
+    if (velocidade > 0.002) requestAnimationFrame(animar);
     else {
-      let sorteado=grupos[indice]; tocarDing();
-      mostrarNotificacao("Grupo sorteado: "+sorteado);
+      let sorteado = gruposDisponiveis[indice];
       grupoSelecionados.push(sorteado);
-      grupos.splice(indice,1);
-      document.getElementById("listaGrupos").value=grupos.join("\n");
-      desenharRoleta("roleta", grupos);
+      gruposDisponiveis.splice(indice, 1);
+      tocarDing();
+      mostrarNotificacao("Grupo sorteado: " + sorteado);
 
-      if(grupoSelecionados.length===2){
-        document.getElementById("grupoWrapper").style.display="none";
-        document.getElementById("localSection").style.display="flex";
+      if (gruposDisponiveis.length === 1) {
+        let ultimo = gruposDisponiveis[0];
+        grupoSelecionados.push(ultimo);
+        gruposDisponiveis.splice(0,1);
+        mostrarNotificacao("Último grupo adicionado: " + ultimo);
       }
 
-      document.getElementById("grupoWrapper").style.pointerEvents="auto";
+      desenharRoleta("roleta", gruposDisponiveis);
+
+      if (grupoSelecionados.length === 2) {
+        document.getElementById("grupoWrapper").style.display = "none";
+        document.getElementById("localSection").style.display = "flex";
+      }
+
+      if (gruposDisponiveis.length === 0) {
+        mostrarNotificacao("Todos os grupos sorteados!");
+      }
+
+      document.getElementById("grupoWrapper").style.pointerEvents = "auto";
       atualizarBotoes();
     }
   }
@@ -202,30 +224,32 @@ function girarRoletaGrupo(){
 
 function girarRoletaLocal(){
   if(locais.length===0){ alert("Não há locais suficientes!"); return; }
-  if(grupoSelecionados.length!==2){ alert("Selecione dois grupos primeiro!"); return; }
+  if(grupoSelecionados.length<2){ alert("Selecione dois grupos primeiro!"); return; }
 
-  let anguloAtual=0, velocidade=Math.random()*0.3 + 0.3;
+  let anguloAtual=0, velocidade=Math.random()*0.3+0.3;
   ultimoSetorLocal=-1;
   document.getElementById("localSection").style.pointerEvents="none";
 
   function animar(){
-    anguloAtual += velocidade; velocidade *= 0.97;
-    desenharRoleta("roletaLocal", locais, anguloAtual);
-
-    let indice = Math.floor((locais.length - ((anguloAtual/(2*Math.PI)) * locais.length) % locais.length)) % locais.length;
-    if(indice!==ultimoSetorLocal){ tocarTick(); ultimoSetorLocal=indice; }
+    anguloAtual+=velocidade; 
+    velocidade*=0.97;
+    let indice = Math.floor((locais.length - ((anguloAtual/(2*Math.PI))*locais.length) % locais.length) % locais.length);
+    desenharRoleta("roletaLocal", locais, anguloAtual, indice);
+    if(indice !== ultimoSetorLocal){ tocarTick(); ultimoSetorLocal = indice; }
 
     if(velocidade>0.002) requestAnimationFrame(animar);
-    else {
-      let localSelecionado=locais[indice]; tocarDing();
+    else{
+      let localSelecionado=locais[indice];
+      tocarDing();
       mostrarNotificacao("Local sorteado: "+localSelecionado);
 
       let tabela=document.getElementById("tabelaConfrontos");
       let row=tabela.insertRow();
-      row.insertCell(0).innerText=grupoSelecionados[0];
-      row.insertCell(1).innerText=grupoSelecionados[1];
-      row.insertCell(2).innerText=localSelecionado;
+      row.insertCell(0).innerText = grupoSelecionados[0];
+      row.insertCell(1).innerText = grupoSelecionados[1];
+      row.insertCell(2).innerText = localSelecionado;
 
+      grupoSelecionados=[];
       document.getElementById("localSection").style.pointerEvents="auto";
     }
   }
@@ -240,32 +264,50 @@ function finalizarConfronto(){
 }
 
 function adicionarGrupo(){ 
-  let novo=document.getElementById("novoGrupo").value.trim();
-  if(novo!==""){ document.getElementById("listaGrupos").value+="\n"+novo; document.getElementById("novoGrupo").value=""; atualizarListas(); }
+  let novo=document.getElementById("novoGrupo").value.trim(); 
+  if(novo!==""){ 
+    document.getElementById("listaGrupos").value+="\n"+novo; 
+    document.getElementById("novoGrupo").value=""; 
+    gruposDisponiveis.push(novo);
+    mostrarNotificacao("Grupo adicionado: " + novo);
+    atualizarListas(); 
+  } 
 }
 function adicionarLocal(){ 
-  let novo=document.getElementById("novoLocal").value.trim();
-  if(novo!==""){ document.getElementById("listaLocais").value+="\n"+novo; document.getElementById("novoLocal").value=""; atualizarListas(); }
+  let novo=document.getElementById("novoLocal").value.trim(); 
+  if(novo!==""){ 
+    document.getElementById("listaLocais").value+="\n"+novo; 
+    document.getElementById("novoLocal").value=""; 
+    atualizarListas(); 
+  } 
 }
 function removerGrupo(){ 
-  let lista=document.getElementById("listaGrupos").value.split("\n").filter(x=>x.trim()!=="");
-  if(lista.length>0) lista.pop();
+  let lista=document.getElementById("listaGrupos").value.split("\n").filter(x=>x.trim()!==""); 
+  if(lista.length>0) {
+    let removido = lista.pop(); 
+    let idx = gruposDisponiveis.indexOf(removido);
+    if(idx!==-1) gruposDisponiveis.splice(idx,1);
+    mostrarNotificacao("Grupo removido: " + removido);
+  }
   document.getElementById("listaGrupos").value = lista.join("\n");
-  atualizarListas();
+  desenharRoleta("roleta", gruposDisponiveis);
+  atualizarBotoes();
 }
 function removerLocal(){ 
-  let lista=document.getElementById("listaLocais").value.split("\n").filter(x=>x.trim()!=="");
-  if(lista.length>0) lista.pop();
-  document.getElementById("listaLocais").value = lista.join("\n");
-  atualizarListas();
+  let lista=document.getElementById("listaLocais").value.split("\n").filter(x=>x.trim()!==""); 
+  if(lista.length>0) lista.pop(); 
+  document.getElementById("listaLocais").value = lista.join("\n"); 
+  desenharRoleta("roletaLocal", lista);
 }
 function reiniciarTabela(){
-  document.getElementById("tabelaConfrontos").innerHTML = "<tr><th>Grupo 1</th><th>Grupo 2</th><th>Local</th></tr>";
-  atualizarListas();
+  document.getElementById("tabelaConfrontos").innerHTML="<tr><th>Grupo 1</th><th>Grupo 2</th><th>Local</th></tr>";
+  gruposDisponiveis = [...document.getElementById("listaGrupos").value.split("\n").filter(x=>x.trim()!=="")];
   grupoSelecionados=[];
-  document.getElementById("localSection").style.display = "none";
-  document.getElementById("grupoWrapper").style.display = "flex";
+  document.getElementById("localSection").style.display="none";
+  document.getElementById("grupoWrapper").style.display="flex";
   document.getElementById("grupoWrapper").style.pointerEvents="auto";
+  desenharRoleta("roleta", gruposDisponiveis);
+  desenharRoleta("roletaLocal", locais);
 }
 </script>
 </body>
