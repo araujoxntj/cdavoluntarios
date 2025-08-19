@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sorteio Guerras</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#111; color:#fff; }
+#loginScreen { position: fixed; top:0; left:0; width:100%; height:100%; background:#111; display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:10000; }
+#loginScreen input { padding:10px; margin:5px; border-radius:6px; border:none; width:200px; }
+#loginScreen button { padding:10px 20px; border:none; border-radius:6px; background:#e63946; color:#fff; cursor:pointer; }
+#loginScreen button:hover { background:#d62828; }
+#mainContent { display:flex; }
+.roleta-container { flex:2; display:flex; justify-content:center; align-items:center; position:relative; padding:20px; flex-direction:column; }
+.lista-container { flex:1; background:#1b1b1b; padding:20px; display:flex; flex-direction:column; gap:20px; }
+textarea { width:100%; height:120px; resize:none; padding:10px; background:#222; color:#fff; border:none; border-radius:6px; margin-bottom:5px; }
+input, button { padding:8px; margin-top:5px; border-radius:6px; border:none; font-weight:bold; }
+input { width:70%; margin-right:5px; }
+button { cursor:pointer; background:#e63946; color:white; transition:0.2s; }
+button:hover { background:#d62828; }
+canvas { margin:20px 0; border-radius:50%; box-shadow:0 0 20px rgba(0,0,0,0.5); }
+.roleta-wrapper, #localSection { display:flex; flex-direction:column; align-items:center; position:relative; }
+.seta { width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:30px solid #e63946; position:absolute; top:-40px; z-index:10; }
+#tabelaConfrontos { position:absolute; left:10px; top:80px; background:#222; border-collapse: collapse; box-shadow:0 0 10px rgba(0,0,0,0.5); }
+#tabelaConfrontos th, #tabelaConfrontos td { border:1px solid #444; padding:8px; text-align:center; }
+#tabelaConfrontos th { background:#e63946; color:white; }
+#notificacao { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background: rgba(230,57,70,0.95); color:#fff; padding:20px 40px; font-size:24px; font-weight:bold; border-radius:10px; opacity:0; pointer-events:none; z-index:1000; transition:opacity 1.5s ease-out; text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.5); }
+.lista-container button { width:100%; margin-top:3px; }
+button:disabled { opacity:0.5; cursor:not-allowed; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <h2>Login</h2>
+  <input id="usuarioInput" placeholder="Usuário">
+  <input id="senhaInput" type="password" placeholder="Senha">
+  <button onclick="verificarLogin()">Entrar</button>
+  <p id="erroLogin" style="color:red; margin-top:10px;"></p>
+</div>
+
+<div id="mainContent" style="display:none;">
+  <div class="roleta-container">
+    <div class="roleta-wrapper" id="grupoWrapper">
+      <div class="seta"></div>
+      <canvas id="roleta" width="400" height="400"></canvas>
+      <button id="btnSortearGrupo" onclick="girarRoletaGrupo()">Sortear Grupo</button>
+    </div>
+
+    <div id="localSection" style="display:none;">
+      <div class="seta"></div>
+      <canvas id="roletaLocal" width="400" height="400"></canvas>
+      <button onclick="girarRoletaLocal()">Sortear Local</button>
+      <button onclick="finalizarConfronto()">Finalizar Confronto</button>
+    </div>
+
+    <div id="notificacao"></div>
+    <table id="tabelaConfrontos"><tr><th>Grupo 1</th><th>Grupo 2</th><th>Local</th></tr></table>
+  </div>
+
+  <div class="lista-container">
+    <div>
+      <h3>Grupos</h3>
+      <textarea id="listaGrupos">Triade
+Nova Holanda
+Anarquia
+Syndcate
+RedDevils
+Revoke
+Coreia
+Jokers
+BlackStreet
+Raven
+MS-13
+Sentinelas</textarea>
+      <input id="novoGrupo" placeholder="Novo grupo">
+      <button onclick="adicionarGrupo()">Adicionar Grupo</button>
+      <button onclick="removerGrupo()">Remover Grupo</button>
+    </div>
+    <div>
+      <h3>Locais</h3>
+      <textarea id="listaLocais">Arena
+Favela
+Mansão
+Praia
+Centro</textarea>
+      <input id="novoLocal" placeholder="Novo local">
+      <button onclick="adicionarLocal()">Adicionar Local</button>
+      <button onclick="removerLocal()">Remover Local</button>
+    </div>
+    <button onclick="reiniciarTabela()">Reiniciar Tabela</button>
+  </div>
+</div>
+
+<audio id="tickSound"><source src="https://actions.google.com/sounds/v1/alarms/analog_watch_alarm_long.ogg" type="audio/ogg"></audio>
+<audio id="dingSound"><source src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" type="audio/ogg"></audio>
+
+<script>
+const usuarios = { "Nitroz":"aguia", "Razor":"lobo", "Kiara":"grilo", "Mineiro":"raposa", "Pollo":"foca" };
+
+if(localStorage.getItem("logado") === "true") {
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("mainContent").style.display="flex";
+}
+
+function verificarLogin(){
+  const u=document.getElementById("usuarioInput").value.trim();
+  const s=document.getElementById("senhaInput").value.trim();
+  if(usuarios[u] && usuarios[u] === s){
+    localStorage.setItem("logado","true");
+    document.getElementById("loginScreen").style.display="none";
+    document.getElementById("mainContent").style.display="flex";
+  }else{
+    document.getElementById("erroLogin").innerText="Usuário ou senha incorretos!";
+  }
+}
+
+let grupos=[], locais=[], grupoSelecionados=[];
+let ultimoSetorGrupo=-1, ultimoSetorLocal=-1;
+const notificacao=document.getElementById("notificacao");
+
+function mostrarNotificacao(texto){
+  notificacao.innerText=texto;
+  notificacao.style.opacity=1;
+  setTimeout(()=>{ notificacao.style.opacity=0; },1500);
+}
+
+function atualizarBotoes() {
+  document.getElementById("btnSortearGrupo").disabled = grupos.length < 2 || grupoSelecionados.length === 2;
+}
+
+function atualizarListas(){
+  grupos=document.getElementById("listaGrupos").value.split("\n").filter(x=>x.trim()!=="");
+  locais=document.getElementById("listaLocais").value.split("\n").filter(x=>x.trim()!=="");
+  desenharRoleta("roleta",grupos);
+  desenharRoleta("roletaLocal",locais);
+  atualizarBotoes();
+}
+
+function desenharRoleta(canvasId,itens,anguloInicio=0){
+  let canvas=document.getElementById(canvasId);
+  let ctx=canvas.getContext("2d");
+  let total=itens.length;
+  let angulo=2*Math.PI/total;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let i=0;i<total;i++){
+    ctx.beginPath();
+    ctx.moveTo(200,200);
+    ctx.fillStyle = i % 2 === 0 ? "#e63946" : "#fff";
+    ctx.strokeStyle="#000"; ctx.lineWidth=2;
+    ctx.arc(200,200,200,anguloInicio+i*angulo,anguloInicio+(i+1)*angulo);
+    ctx.lineTo(200,200); ctx.fill(); ctx.stroke();
+
+    ctx.save();
+    ctx.translate(200,200);
+    ctx.rotate(anguloInicio+i*angulo+angulo/2);
+    ctx.textAlign="right";
+    ctx.fillStyle = "#000";
+    ctx.font="bold 16px Arial";
+    ctx.fillText(itens[i],190,5);
+    ctx.restore();
+  }
+}
+
+function tocarTick(){ let sound=document.getElementById("tickSound"); sound.currentTime=0; sound.play();}
+function tocarDing(){ let sound=document.getElementById("dingSound"); sound.currentTime=0; sound.play();}
+
+atualizarListas();
+
+function girarRoletaGrupo(){
+  if(grupos.length<2){ alert("Não há grupos suficientes!"); return; }
+  let anguloAtual=0, velocidade=Math.random()*0.3 + 0.3;
+  ultimoSetorGrupo=-1;
+  document.getElementById("grupoWrapper").style.pointerEvents="none";
+
+  function animar(){
+    anguloAtual += velocidade; velocidade *= 0.97;
+    desenharRoleta("roleta", grupos, anguloAtual);
+
+    let indice = Math.floor((grupos.length - ((anguloAtual/(2*Math.PI)) * grupos.length) % grupos.length)) % grupos.length;
+    if(indice!==ultimoSetorGrupo){ tocarTick(); ultimoSetorGrupo=indice; }
+
+    if(velocidade>0.002) requestAnimationFrame(animar);
+    else {
+      let sorteado=grupos[indice]; tocarDing();
+      mostrarNotificacao("Grupo sorteado: "+sorteado);
+      grupoSelecionados.push(sorteado);
+      grupos.splice(indice,1);
+      document.getElementById("listaGrupos").value=grupos.join("\n");
+      desenharRoleta("roleta", grupos);
+
+      if(grupoSelecionados.length===2){
+        document.getElementById("grupoWrapper").style.display="none";
+        document.getElementById("localSection").style.display="flex";
+      }
+
+      document.getElementById("grupoWrapper").style.pointerEvents="auto";
+      atualizarBotoes();
+    }
+  }
+  animar();
+}
+
+function girarRoletaLocal(){
+  if(locais.length===0){ alert("Não há locais suficientes!"); return; }
+  if(grupoSelecionados.length!==2){ alert("Selecione dois grupos primeiro!"); return; }
+
+  let anguloAtual=0, velocidade=Math.random()*0.3 + 0.3;
+  ultimoSetorLocal=-1;
+  document.getElementById("localSection").style.pointerEvents="none";
+
+  function animar(){
+    anguloAtual += velocidade; velocidade *= 0.97;
+    desenharRoleta("roletaLocal", locais, anguloAtual);
+
+    let indice = Math.floor((locais.length - ((anguloAtual/(2*Math.PI)) * locais.length) % locais.length)) % locais.length;
+    if(indice!==ultimoSetorLocal){ tocarTick(); ultimoSetorLocal=indice; }
+
+    if(velocidade>0.002) requestAnimationFrame(animar);
+    else {
+      let localSelecionado=locais[indice]; tocarDing();
+      mostrarNotificacao("Local sorteado: "+localSelecionado);
+
+      let tabela=document.getElementById("tabelaConfrontos");
+      let row=tabela.insertRow();
+      row.insertCell(0).innerText=grupoSelecionados[0];
+      row.insertCell(1).innerText=grupoSelecionados[1];
+      row.insertCell(2).innerText=localSelecionado;
+
+      document.getElementById("localSection").style.pointerEvents="auto";
+    }
+  }
+  animar();
+}
+
+function finalizarConfronto(){
+  grupoSelecionados=[];
+  document.getElementById("localSection").style.display="none";
+  document.getElementById("grupoWrapper").style.display="flex";
+  atualizarBotoes();
+}
+
+function adicionarGrupo(){ 
+  let novo=document.getElementById("novoGrupo").value.trim();
+  if(novo!==""){ document.getElementById("listaGrupos").value+="\n"+novo; document.getElementById("novoGrupo").value=""; atualizarListas(); }
+}
+function adicionarLocal(){ 
+  let novo=document.getElementById("novoLocal").value.trim();
+  if(novo!==""){ document.getElementById("listaLocais").value+="\n"+novo; document.getElementById("novoLocal").value=""; atualizarListas(); }
+}
+function removerGrupo(){ 
+  let lista=document.getElementById("listaGrupos").value.split("\n").filter(x=>x.trim()!=="");
+  if(lista.length>0) lista.pop();
+  document.getElementById("listaGrupos").value = lista.join("\n");
+  atualizarListas();
+}
+function removerLocal(){ 
+  let lista=document.getElementById("listaLocais").value.split("\n").filter(x=>x.trim()!=="");
+  if(lista.length>0) lista.pop();
+  document.getElementById("listaLocais").value = lista.join("\n");
+  atualizarListas();
+}
+function reiniciarTabela(){
+  document.getElementById("tabelaConfrontos").innerHTML = "<tr><th>Grupo 1</th><th>Grupo 2</th><th>Local</th></tr>";
+  atualizarListas();
+  grupoSelecionados=[];
+  document.getElementById("localSection").style.display = "none";
+  document.getElementById("grupoWrapper").style.display = "flex";
+  document.getElementById("grupoWrapper").style.pointerEvents="auto";
+}
+</script>
+</body>
+</html>
