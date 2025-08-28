@@ -1,12 +1,12 @@
 (function () {
-  const fimManutencao = new Date("2025-08-01T20:00:00").getTime(); // Defina o horário de término da manutenção
+  const fimManutencao = new Date("2025-08-28T21:30:00").getTime(); // Defina o horário de término da manutenção
   const agora = new Date().getTime();
   const jaEsperou = localStorage.getItem("manutencao_liberada");
 
   // Se ainda está em manutenção e o usuário não esperou
   if (agora < fimManutencao && !jaEsperou) {
-    if (!window.location.href.includes("manutencao.html")) {
-      window.location.href = "/manutencao.html";  // Redireciona para a página de manutenção
+    if (!window.location.href.includes("/projeto/manutencao.html")) {
+      window.location.href = "/projeto/manutencao.html";  // Redireciona para a página de manutenção
     }
   }
 
