@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel Administrativo</title>
+<link rel="icon" href="https://cidadealtarp.com/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#111; --card:#1b1b1b; --muted:#999; --accent:#ffbb00; --accent2:#cc8800; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Comfortaa',sans-serif; background:var(--bg); color:#fff; }
+.center { display:flex; align-items:center; justify-content:center; min-height:100dvh; padding:16px; }
+.card { width:100%; max-width:420px; background:var(--card); padding:24px; border-radius:14px; box-shadow:0 8px 30px rgba(0,0,0,.4);}
+h1,h2 { margin:0 0 12px; }
+p.muted { color:var(--muted); margin:0 0 16px; }
+input, button { width:100%; padding:12px 14px; border:none; border-radius:10px; font-family:'Comfortaa',sans-serif; font-size:16px; }
+input { background:#222; color:#fff; outline:none; }
+input::placeholder { color:#777; }
+button.primary { background:var(--accent); font-weight:700; cursor:pointer; }
+button.primary:hover { background:var(--accent2); }
+button.ghost { background:#222; cursor:pointer; }
+button.small { padding:8px 12px; font-size:14px; }
+.app { display:none; padding:20px; max-width:1100px; margin:0 auto; }
+.topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.topbar a { color:#fff; text-decoration:none; }
+.topbar .left { display:flex; gap:10px; align-items:center; }
+.topbar img { width:28px; height:28px; }
+.form { display:grid; grid-template-columns: repeat(4, 1fr) auto; gap:10px; background:var(--card); padding:14px; border-radius:14px; margin-bottom:16px;}
+table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:14px; }
+thead th { background:#222; padding:12px; text-align:center; font-weight:700; position:sticky; top:0; }
+tbody td { border-top:1px solid #333; padding:10px; text-align:center; }
+tbody tr:hover { background:#191919; }
+.right { text-align:right; }
+.muted { color:var(--muted); }
+.btn-action { padding:4px 8px; font-size:12px; border-radius:6px; margin:0 2px; cursor:pointer; }
+.btn-edit { background:#0099ff; color:#fff; }
+.btn-delete { background:#ff5555; color:#fff; }
+@media (max-width: 720px) { .form { grid-template-columns: 1fr 1fr; } .form button { grid-column:1/-1; } .app{padding:10px;} }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="center">
+  <div class="card">
+    <h2>Login</h2>
+    <p class="muted">Acesso restrito</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <input type="text" id="usuario" placeholder="Usuário" autocomplete="username">
+      <input type="password" id="senha" placeholder="Senha" autocomplete="current-password">
+      <button type="button" class="primary" id="btnLogin">Entrar</button>
+      <p id="loginError" style="color:#ff5555; font-size:13px; margin:5px 0 0; display:none;"></p>
+    </div>
+    <p class="muted" style="margin-top:10px; font-size:12px;"><b>Atenção:</b> Este painel é restrito apenas ao Coordenador dos <b>voluntários</b>.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app">
+  <div class="topbar">
+    <div class="left">
+      <a href="index.html" title="Voltar"><img src="https://cidadealtarp.com/favicon.svg" alt="Home"></a>
+      <h2 style="margin:0;">Painel • Voluntários</h2>
+    </div>
+    <div class="right">
+      <button class="ghost small" id="btnSair">Sair</button>
+      <button class="ghost small" id="btnReset">Reiniciar Tabela</button>
+    </div>
+  </div>
+
+  <!-- Formulário -->
+  <div class="form">
+    <input type="text" id="nome" placeholder="Nome" required>
+    <input type="number" id="horas" placeholder="Horas" min="0" step="1" required>
+    <input type="number" id="pontuacao" placeholder="Pontuação" min="0" step="1" required>
+    <input type="number" id="chamados" placeholder="Chamados" min="0" step="1" required>
+    <button class="primary" type="button" id="btnAdicionar">Adicionar</button>
+  </div>
+
+  <!-- Tabela -->
+  <div style="overflow:auto;">
+    <table id="tabela">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Horas</th>
+          <th>Pontuação</th>
+          <th>Chamados</th>
+          <th>Diamantes (calc)</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+<!-- Botão Registrar Horas abaixo da tabela -->
+<div style="text-align:center; margin:665px 0 60px;">
+  <button class="primary" id="btnHoras" style="width:200px; padding:8px 0; font-size:14px; border-radius:8px;">
+    Registrar Horas
+  </button>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+
+const loginScreen=document.getElementById('loginScreen');
+const app=document.getElementById('app');
+const btnLogin=document.getElementById('btnLogin');
+const btnSair=document.getElementById('btnSair');
+const btnReset=document.getElementById('btnReset');
+const btnAdicionar=document.getElementById('btnAdicionar');
+const btnHoras=document.getElementById('btnHoras');
+const loginError=document.getElementById('loginError');
+
+const STORAGE_KEY='painel-voluntarios-v2';
+let itens=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+let editarIndex=null;
+
+function showApp(){ loginScreen.style.display='none'; app.style.display='block'; render(); }
+function sair(){ sessionStorage.removeItem('auth_ok'); location.reload(); }
+
+if(sessionStorage.getItem('auth_ok')==='1') showApp();
+
+function login(){
+  const u=(document.getElementById('usuario').value||'').trim().toLowerCase();
+  const p=(document.getElementById('senha').value||'').trim();
+  if(u==='razor' && p==='heyorazor'){ sessionStorage.setItem('auth_ok','1'); showApp(); }
+  else { loginError.textContent='Usuário ou senha incorretos.'; loginError.style.display='block'; }
+}
+
+btnLogin.addEventListener('click',login);
+btnSair.addEventListener('click',sair);
+
+function salvar(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(itens)); }
+
+function calcularDiamantes(horas,pontuacao,chamados){
+  const h=Math.max(0,Number(horas)||0);
+  const p=Math.max(0,Number(pontuacao)||0);
+  const c=Math.max(0,Number(chamados)||0);
+  return Math.min(100000,Math.round((h*100)+(p*700)+(c*10)));
+}
+
+function ordenar(){ itens.sort((a,b)=>(b.diamantes-a.diamantes)||(b.horas-a.horas)); }
+
+function render(){
+  ordenar();
+  const tbody=document.querySelector('#tabela tbody');
+  tbody.innerHTML='';
+  let totalHoras=0,totalPont=0,totalChamados=0,totalDiam=0;
+  itens.forEach((it,index)=>{
+    totalHoras+=it.horas; totalPont+=it.pontuacao; totalChamados+=it.chamados; totalDiam+=it.diamantes;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${escapeHtml(it.nome)}</td>
+      <td>${it.horas}</td>
+      <td>${it.pontuacao}</td>
+      <td>${it.chamados}</td>
+      <td><b>${it.diamantes}</b></td>
+      <td>
+        <button class="btn-action btn-edit" data-index="${index}">Editar</button>
+        <button class="btn-action btn-delete" data-index="${index}">Remover</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('totais').textContent=`Totais — Horas: ${totalHoras} • Pontuação: ${totalPont} • Chamados: ${totalChamados} • Diamantes (calc): ${totalDiam}`;
+
+  document.querySelectorAll('.btn-edit').forEach(btn=>{ btn.onclick=()=>editar(btn.dataset.index); });
+  document.querySelectorAll('.btn-delete').forEach(btn=>{ btn.onclick=()=>remover(btn.dataset.index); });
+}
+
+function escapeHtml(s){ return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+btnAdicionar.addEventListener('click',()=>{
+  const nome=document.getElementById('nome').value.trim();
+  const horas=Number(document.getElementById('horas').value||0);
+  const pontuacao=Number(document.getElementById('pontuacao').value||0);
+  const chamados=Number(document.getElementById('chamados').value||0);
+  if(!nome){ alert('Informe o nome.'); return; }
+  const diamantes=calcularDiamantes(horas,pontuacao,chamados);
+
+  if(editarIndex!==null){
+    itens[editarIndex]={nome,horas,pontuacao,chamados,diamantes};
+    editarIndex=null;
+    btnAdicionar.textContent='Adicionar';
+  } else {
+    itens.push({nome,horas,pontuacao,chamados,diamantes});
+  }
+  salvar(); render();
+  document.getElementById('nome').value='';
+  document.getElementById('horas').value='';
+  document.getElementById('pontuacao').value='';
+  document.getElementById('chamados').value='';
+});
+
+function editar(index){
+  const it=itens[index];
+  document.getElementById('nome').value=it.nome;
+  document.getElementById('horas').value=it.horas;
+  document.getElementById('pontuacao').value=it.pontuacao;
+  document.getElementById('chamados').value=it.chamados;
+  editarIndex=index;
+  btnAdicionar.textContent='Salvar';
+}
+
+function remover(index){
+  if(confirm('Tem certeza que deseja remover este voluntário?')){
+    itens.splice(index,1);
+    salvar(); render();
+  }
+}
+
+btnReset.addEventListener('click',()=>{
+  if(confirm('Tem certeza que deseja reiniciar a tabela? Todos os dados serão apagados.')){
+    itens=[]; salvar(); render();
+  }
+});
+
+btnHoras.addEventListener('click', ()=>{
+  window.location.href='registro.html';
+});
+
+render();
+
+});
+</script>
+</body>
+</html>
