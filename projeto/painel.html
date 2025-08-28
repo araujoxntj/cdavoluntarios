@@ -36,6 +36,9 @@ tbody tr:hover { background:#191919; }
 .btn-action { padding:4px 8px; font-size:12px; border-radius:6px; margin:0 2px; cursor:pointer; }
 .btn-edit { background:#0099ff; color:#fff; }
 .btn-delete { background:#ff5555; color:#fff; }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; }
+.modal-content { background:#1b1b1b; padding:24px; border-radius:12px; max-width:400px; width:90%; text-align:center; }
+.modal-content button { margin:10px; }
 @media (max-width: 720px) { .form { grid-template-columns: 1fr 1fr; } .form button { grid-column:1/-1; } .app{padding:10px;} }
 </style>
 </head>
@@ -93,15 +96,25 @@ tbody tr:hover { background:#191919; }
       </thead>
       <tbody></tbody>
     </table>
+    <p id="totais" class="muted" style="margin-top:10px;"></p>
   </div>
 
-<!-- Botão Registrar Horas abaixo da tabela -->
-<div style="text-align:center; margin:665px 0 60px;">
-  <button class="primary" id="btnHoras" style="width:200px; padding:8px 0; font-size:14px; border-radius:8px;">
-    Registrar Horas
-  </button>
+  <!-- Botão Registrar Horas -->
+  <div style="text-align:center; margin:20px 0 60px;">
+    <button class="primary" id="btnHoras" style="width:200px; padding:8px 0; font-size:14px; border-radius:8px;">
+      Registrar Horas
+    </button>
+  </div>
 </div>
 
+<!-- Modal de Confirmação -->
+<div id="modalExcluir" class="modal">
+  <div class="modal-content">
+    <p>Tem certeza que deseja remover este voluntário?</p>
+    <button id="confirmExcluir" class="primary">Sim</button>
+    <button id="cancelExcluir" class="ghost">Cancelar</button>
+  </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
@@ -114,10 +127,14 @@ const btnReset=document.getElementById('btnReset');
 const btnAdicionar=document.getElementById('btnAdicionar');
 const btnHoras=document.getElementById('btnHoras');
 const loginError=document.getElementById('loginError');
+const modalExcluir=document.getElementById('modalExcluir');
+const confirmExcluir=document.getElementById('confirmExcluir');
+const cancelExcluir=document.getElementById('cancelExcluir');
 
 const STORAGE_KEY='painel-voluntarios-v2';
 let itens=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
 let editarIndex=null;
+let excluirIndex=null;
 
 function showApp(){ loginScreen.style.display='none'; app.style.display='block'; render(); }
 function sair(){ sessionStorage.removeItem('auth_ok'); location.reload(); }
@@ -149,7 +166,9 @@ function render(){
   ordenar();
   const tbody=document.querySelector('#tabela tbody');
   tbody.innerHTML='';
+
   let totalHoras=0,totalPont=0,totalChamados=0,totalDiam=0;
+
   itens.forEach((it,index)=>{
     totalHoras+=it.horas; totalPont+=it.pontuacao; totalChamados+=it.chamados; totalDiam+=it.diamantes;
     const tr=document.createElement('tr');
@@ -160,16 +179,18 @@ function render(){
       <td>${it.chamados}</td>
       <td><b>${it.diamantes}</b></td>
       <td>
-        <button class="btn-action btn-edit" data-index="${index}">Editar</button>
-        <button class="btn-action btn-delete" data-index="${index}">Remover</button>
+        <button class="btn-action btn-edit">Editar</button>
+        <button class="btn-action btn-delete">Remover</button>
       </td>
     `;
     tbody.appendChild(tr);
-  });
-  document.getElementById('totais').textContent=`Totais — Horas: ${totalHoras} • Pontuação: ${totalPont} • Chamados: ${totalChamados} • Diamantes (calc): ${totalDiam}`;
 
-  document.querySelectorAll('.btn-edit').forEach(btn=>{ btn.onclick=()=>editar(btn.dataset.index); });
-  document.querySelectorAll('.btn-delete').forEach(btn=>{ btn.onclick=()=>remover(btn.dataset.index); });
+    // Eventos dos botões
+    tr.querySelector('.btn-edit').addEventListener('click',()=>editar(index));
+    tr.querySelector('.btn-delete').addEventListener('click',()=>abrirModalExcluir(index));
+  });
+
+  document.getElementById('totais').textContent=`Totais — Horas: ${totalHoras} • Pontuação: ${totalPont} • Chamados: ${totalChamados} • Diamantes (calc): ${totalDiam}`;
 }
 
 function escapeHtml(s){ return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
@@ -206,12 +227,21 @@ function editar(index){
   btnAdicionar.textContent='Salvar';
 }
 
-function remover(index){
-  if(confirm('Tem certeza que deseja remover este voluntário?')){
-    itens.splice(index,1);
-    salvar(); render();
-  }
+function abrirModalExcluir(index){
+  excluirIndex=index;
+  modalExcluir.style.display='flex';
 }
+
+confirmExcluir.addEventListener('click',()=>{
+  if(excluirIndex!==null){
+    itens.splice(excluirIndex,1);
+    salvar(); render();
+    modalExcluir.style.display='none';
+    excluirIndex=null;
+  }
+});
+
+cancelExcluir.addEventListener('click',()=>{ modalExcluir.style.display='none'; excluirIndex=null; });
 
 btnReset.addEventListener('click',()=>{
   if(confirm('Tem certeza que deseja reiniciar a tabela? Todos os dados serão apagados.')){
@@ -219,9 +249,7 @@ btnReset.addEventListener('click',()=>{
   }
 });
 
-btnHoras.addEventListener('click', ()=>{
-  window.location.href='registro.html';
-});
+btnHoras.addEventListener('click', ()=>{ window.location.href='registro.html'; });
 
 render();
 
