@@ -67,6 +67,7 @@ tbody tr:hover { background:#191919; }
       <h2 style="margin:0;">Painel • Voluntários</h2>
     </div>
     <div class="right">
+      <button class="ghost small" id="btnFeedbacks">Feedbacks</button>
       <button class="ghost small" id="btnSair">Sair</button>
       <button class="ghost small" id="btnReset">Reiniciar Tabela</button>
     </div>
@@ -99,12 +100,15 @@ tbody tr:hover { background:#191919; }
     <p id="totais" class="muted" style="margin-top:10px;"></p>
   </div>
 
-  <!-- Botão Registrar Horas -->
-  <div style="text-align:center; margin:20px 0 60px;">
-    <button class="primary" id="btnHoras" style="width:200px; padding:8px 0; font-size:14px; border-radius:8px;">
-      Registrar Horas
-    </button>
-  </div>
+<!-- Botões: Registrar Horas + Feedbacks -->
+<div style="display:flex; justify-content:center; gap:20px; margin:20px 0 60px;">
+  <button class="primary" id="btnHoras" style="width:200px; padding:8px 0; font-size:14px; border-radius:8px;">
+    Registrar Horas
+  </button>
+
+  <button class="primary" id="btnFeedbacksPanel" style="width:200px; padding:8px 0; font-size:14px; border-radius:8px;">
+    Feedbacks
+  </button>
 </div>
 
 <!-- Modal de Confirmação -->
@@ -126,6 +130,7 @@ const btnSair=document.getElementById('btnSair');
 const btnReset=document.getElementById('btnReset');
 const btnAdicionar=document.getElementById('btnAdicionar');
 const btnHoras=document.getElementById('btnHoras');
+const btnFeedbacks=document.getElementById('btnFeedbacks');
 const loginError=document.getElementById('loginError');
 const modalExcluir=document.getElementById('modalExcluir');
 const confirmExcluir=document.getElementById('confirmExcluir');
@@ -150,6 +155,11 @@ function login(){
 
 btnLogin.addEventListener('click',login);
 btnSair.addEventListener('click',sair);
+
+// Botão Feedbacks
+btnFeedbacks.addEventListener('click', () => {
+  window.open('feedbacks.html', '_blank'); // abre a página de feedbacks em nova aba
+});
 
 function salvar(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(itens)); }
 
@@ -250,6 +260,17 @@ btnReset.addEventListener('click',()=>{
 });
 
 btnHoras.addEventListener('click', ()=>{ window.location.href='registro.html'; });
+
+// Botão Registrar Horas
+  document.getElementById('btnHoras').addEventListener('click', () => {
+    window.location.href = 'registro.html';
+  });
+
+  // Botão Feedbacks
+  document.getElementById('btnFeedbacksPanel').addEventListener('click', () => {
+        window.location.href = 'feedbacks.html';
+
+  });
 
 render();
 
