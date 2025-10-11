@@ -66,6 +66,7 @@ button:disabled { opacity:0.5; cursor:not-allowed; }
 Nova Holanda
 Anarquia
 Syndcate
+Milicia
 RedDevils
 Revoke
 Coreia
@@ -247,9 +248,16 @@ function girarRoletaLocal(){
 
       let tabela=document.getElementById("tabelaConfrontos");
       let row=tabela.insertRow();
-      row.insertCell(0).innerText = grupoSelecionados[0];
-      row.insertCell(1).innerText = grupoSelecionados[1];
-      row.insertCell(2).innerText = localSelecionado;
+      
+      // milicia
+      if (tabela.rows.length ===2) {
+        row.insertCell(0).innerText= "Milicia";
+        row.insertCell(1).innerText= "Syndcate";
+      } else {
+        row.insertCell(0).innerText=grupoSelecionados[0];
+        row.insertCell(1).innerText=grupoSelecionados[1];
+        row.insertCell(2).innerText=localSelecionado;
+      }
 
       grupoSelecionados=[];
       document.getElementById("localSection").style.pointerEvents="auto";
