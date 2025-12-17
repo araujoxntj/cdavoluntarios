@@ -5,6 +5,8 @@
 <title>Admin • Usuários</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://cidadealta.gg/favicon.svg" type="image/svg+xml">
+
 <style>
 body{ margin:0; font-family:'Comfortaa',sans-serif; background:#0b0b0b; color:#fff; }
 header{ background:#121212; padding:16px 30px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; }
@@ -15,7 +17,7 @@ table{ width:100%; border-collapse:collapse; background:#151515; border-radius:1
 th, td{ padding:14px; text-align:left; font-size:.85rem; }
 th{ background:#1c1c1c; font-weight:700; }
 tr{ border-bottom:1px solid #222; }
-select,input{ background:#111; color:#fff; border:1px solid #333; border-radius:8px; padding:6px 8px; font-size:.8rem; }
+select,input[type=text],input[type=date]{ background:#111; color:#fff; border:1px solid #333; border-radius:8px; padding:6px 8px; font-size:.8rem; }
 .btn{ padding:6px 10px; border-radius:8px; border:none; font-size:.75rem; font-weight:700; cursor:pointer; margin-right:6px; }
 .btn-save{ background:#ffbb00; color:#000; }
 .btn-reset{ background:#444; color:#fff; }
@@ -40,6 +42,7 @@ select,input{ background:#111; color:#fff; border:1px solid #333; border-radius:
       <th>Cargo</th>
       <th>Função</th>
       <th>Tempo</th>
+      <th>Data Início</th>
       <th>Ações</th>
     </tr>
   </thead>
@@ -52,11 +55,46 @@ let usuariosCache = JSON.parse(localStorage.getItem('usuarios')) || [];
 let fotosCache = JSON.parse(localStorage.getItem('fotos') || '{}');
 const tbody = document.querySelector('tbody');
 
+function formatarData(timestamp){
+  if(!timestamp) return '-';
+  const d = new Date(timestamp);
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const ano = d.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+
+function timestampParaInputDate(timestamp){
+  const d = new Date(timestamp);
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const dia = String(d.getDate()).padStart(2,'0');
+  return `${d.getFullYear()}-${mes}-${dia}`;
+}
+
+// Função para calcular tempo em anos e meses
+function calcularTempo(inicioTimestamp) {
+  const inicio = new Date(inicioTimestamp);
+  const agora = new Date();
+
+  let anos = agora.getFullYear() - inicio.getFullYear();
+  let meses = agora.getMonth() - inicio.getMonth();
+
+  if (agora.getDate() < inicio.getDate()) {
+    meses -= 1;
+  }
+  if (meses < 0) {
+    anos -= 1;
+    meses += 12;
+  }
+
+  return { anos, meses };
+}
+
 function renderTable(){
   const cargosSalvos = JSON.parse(localStorage.getItem('cargos'))?.map(c => c.nome) || [];
   tbody.innerHTML = usuariosCache.map((u,i)=>{
-    const inicio = u.inicio || Date.now();
-    const dias = Math.floor((Date.now() - inicio) / 86400000);
+    if(!u.inicio) u.inicio = Date.now();
+    const { anos, meses } = calcularTempo(u.inicio);
     const foto = fotosCache[u.email] || 'https://via.placeholder.com/32';
     const cargos = Array.from(new Set([...cargosSalvos, u.role || 'User', 'User','Moderador','CM','Leader']));
 
@@ -70,23 +108,35 @@ function renderTable(){
           ${cargos.map(r => `<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
         </select>
       </td>
-      <td><input value="${u.funcao||''}" onchange="setFuncao(${i}, this.value)"></td>
-      <td>${dias} dias</td>
+      <td><input type="text" value="${u.funcao||''}" onchange="setFuncao(${i}, this.value)"></td>
+      <td id="tempo-${i}">${anos} anos, ${meses} meses</td>
+      <td>
+        <input type="date" value="${timestampParaInputDate(u.inicio)}" onchange="setInicio(${i}, this.value)">
+      </td>
       <td>
         <button class="btn btn-reset" onclick="reset(${i})">Senha</button>
         <button class="btn btn-del" onclick="del(${i})">Excluir</button>
       </td>
     </tr>`;
   }).join('');
+  save();
 }
 
+// Funções de edição
 function setRole(i,v){ usuariosCache[i].role=v; save(); }
 function setFuncao(i,v){ usuariosCache[i].funcao=v; save(); }
+function setInicio(i,dateStr){
+  const timestamp = new Date(dateStr).getTime();
+  usuariosCache[i].inicio = timestamp;
+  save();
+
+  const { anos, meses } = calcularTempo(timestamp);
+  document.getElementById(`tempo-${i}`).innerText = `${anos} anos, ${meses} meses`;
+}
 function reset(i){ const senha=prompt('Nova senha:'); if(!senha) return; usuariosCache[i].senha=senha; save(); alert('Senha redefinida'); }
 function del(i){ if(!confirm('Excluir este usuário?')) return; usuariosCache.splice(i,1); save(); renderTable(); }
 function save(){ localStorage.setItem('usuarios', JSON.stringify(usuariosCache)); }
 
-// 🔹 Atualiza todos os selects de cargos dinamicamente
 function atualizarSelects(){
   const cargosSalvos = JSON.parse(localStorage.getItem('cargos'))?.map(c => c.nome) || [];
   const cargos = Array.from(new Set([...cargosSalvos, 'User','Moderador','CM','Leader']));
@@ -98,10 +148,8 @@ function atualizarSelects(){
   });
 }
 
-// 🔹 Escuta evento disparado pelo Admin
 window.addEventListener('cargosAtualizados', atualizarSelects);
 
-// Render inicial
 renderTable();
 </script>
 

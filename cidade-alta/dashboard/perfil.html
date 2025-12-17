@@ -2,123 +2,313 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Perfil • Cidade Alta</title>
+<title>Perfil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/global.css">
+<link rel="icon" href="https://cidadealta.gg/favicon.svg" type="image/svg+xml">
 <style>
-/* Mantém todo o seu CSS original */
-.profile-wrap{ max-width:1100px; margin:40px auto; padding:0 20px; }
-.profile-card{ display:grid; grid-template-columns:260px 1fr; gap:24px; }
-.photo-box{ background:#151515; border-radius:18px; padding:20px; text-align:center; }
-.photo-box img{ width:140px; height:140px; border-radius:50%; object-fit:cover; border:3px solid #ffbb00; }
-.photo-box label{ display:inline-block; margin-top:12px; font-size:.75rem; background:#ffbb00; color:#000; padding:6px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
-.photo-box input{ display:none; }
-.info-box{ background:#151515; border-radius:18px; padding:24px; }
-.badge{ display:inline-block; background:#ffbb00; color:#000; padding:4px 12px; border-radius:999px; font-size:.7rem; font-weight:700; margin-bottom:14px; }
-.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:20px; }
-.item{ background:#101010; padding:16px; border-radius:14px; border:1px solid #222; }
-.item span{ font-size:.7rem; opacity:.6; }
-.item strong{ display:block; margin-top:6px; }
-.actions{ margin-top:26px; display:flex; gap:10px; flex-wrap:wrap; }
-.action{ background:#1a1a1a; padding:10px 16px; border-radius:12px; font-size:.8rem; cursor:pointer; transition:0.2s; }
-.action:hover{ background:#ffbb00; color:#000; }
+body{
+  margin:0;
+  font-family:'Comfortaa',sans-serif;
+  background:#0b0b0b;
+  color:#fff;
+}
+
+/* CONTAINER */
+.container {
+  max-width:1200px;
+  margin:60px auto;
+  display:grid;
+  grid-template-columns:320px 1fr;
+  gap:30px;
+  padding:0 20px;
+  position:relative;
+}
+
+/* ICONE ADMIN */
+.admin-icon {
+  position:absolute;
+  top:0; left:0;
+  margin:15px;
+  width:35px;
+  cursor:pointer;
+  transition:.3s;
+}
+.admin-icon:hover { transform:scale(1.1); }
+
+/* BOTAO VOLTAR */
+.back-btn {
+  position:absolute;
+  top:0;
+  right:0;
+  margin:15px;
+  padding:8px 14px;
+  background:#ffbb00;
+  color:#000;
+  font-weight:700;
+  border-radius:10px;
+  text-decoration:none;
+  transition:.3s;
+}
+.back-btn:hover { opacity:.8; }
+
+/* PERFIL LATERAL */
+.profile-box {
+  background:linear-gradient(145deg,#121212,#1a1a1a);
+  border-radius:18px;
+  padding:30px 20px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,0.6);
+  transition:.3s;
+}
+.profile-box:hover { transform:translateY(-3px); }
+.profile-pic {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid #ffbb00;
+  cursor:pointer;
+  transition:.3s;
+}
+.profile-pic:hover {
+  transform:scale(1.1);
+  box-shadow:0 0 18px #ffbb00;
+}
+.profile-box h2 {
+  margin:15px 0 5px;
+  font-size:1.5rem;
+}
+.profile-box span {
+  font-size:.85rem;
+  opacity:.7;
+  display:block;
+}
+.status {
+  margin:15px 0;
+  padding:8px;
+  border-radius:12px;
+  font-size:.85rem;
+  font-weight:700;
+  color:#ffbb00;
+}
+
+/* CONTEUDO */
+.content { perspective: 1000px; }
+
+/* ABAS */
+.tabs {
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.tab {
+  padding:10px 18px;
+  border-radius:12px;
+  border:1px solid #333;
+  cursor:pointer;
+  font-weight:700;
+  transition:.3s;
+}
+.tab.active {
+  background:#ffbb00;
+  color:#000;
+  border:none;
+}
+.tab-content {
+  display:none;
+  width:100%;
+  background:linear-gradient(145deg,#121212,#1a1a1a);
+  border-radius:18px;
+  padding:25px;
+  box-shadow:0 0 30px rgba(0,0,0,.6);
+}
+.tab-content.active { display:block; }
+
+/* FORMULARIOS */
+.field { margin-bottom:15px; }
+label { display:block; font-size:.8rem; margin-bottom:5px; opacity:.7; }
+input { width:100%; padding:12px; border-radius:10px; border:none; background:#1c1c1c; color:#fff; font-weight:500; }
+
+/* TABELA HISTORICO VIP */
+table { width:100%; border-collapse:collapse; }
+th,td { padding:12px; border-bottom:1px solid #222; font-size:.9rem; text-align:center; }
+.status-tag { padding:4px 10px; border-radius:8px; font-size:.75rem; font-weight:700; }
+.status-tag.aprovado { background:#28a745; color:#fff; }
+.status-tag.pendente { background:#ffbb00; color:#000; animation: blink 1s infinite; }
+.status-tag.rejeitado { background:#dc3545; color:#fff; }
+
+@keyframes blink { 0%,50%,100% { opacity:1; } 25%,75% { opacity:0.3; } }
 </style>
 </head>
-<body onload="initProfile()">
+<body>
 
-<header class="top">
-  <h1>Meu Perfil</h1>
-  <button class="btn-small" onclick="go('dashboard.html')">← Dashboard</button>
-</header>
+<!-- ICONE ADMIN -->
+<img src="https://cidadealta.gg/favicon.svg" class="admin-icon" title="Painel Admin" onclick="location.href='../admin/painel.html'">
 
-<div class="profile-wrap">
-  <div class="profile-card">
 
-    <!-- FOTO -->
-    <div class="photo-box">
-      <img id="foto" src="https://via.placeholder.com/150">
-      <input type="file" id="upload">
-      <label for="upload">Alterar foto</label>
+<!-- BOTAO VOLTAR -->
+<a href="dashboard.html" class="back-btn">← Dashboard</a>
+
+<div class="container">
+
+  <!-- PERFIL -->
+  <div class="profile-box">
+    <img src="https://i.imgur.com/8Km9tLL.png" class="profile-pic" id="foto">
+    <h2 id="nome">Usuário</h2>
+    <span id="tempoEquipe">Tempo de equipe: 0 dias</span>
+    <div class="status" id="cargoStatus">Cargo</div>
+  </div>
+
+  <!-- CONTEUDO -->
+  <div class="content">
+
+    <div class="tabs">
+      <div class="tab active" onclick="openTab(0)">Seus Dados</div>
+      <div class="tab" onclick="openTab(1)">Histórico de VIPs</div>
     </div>
 
-    <!-- INFO -->
-    <div class="info-box">
-      <h2 id="nome"></h2>
-      <div class="badge" id="cargo"></div>
-
-      <div class="grid">
-        <div class="item"><span>Email</span><strong id="email"></strong></div>
-        <div class="item"><span>Função</span><strong id="funcao"></strong></div>
-        <div class="item"><span>Tempo de equipe</span><strong id="tempo">—</strong></div>
+    <!-- DADOS -->
+    <div class="tab-content active">
+      <div class="field">
+        <label>Nome</label>
+        <input id="inputNome" disabled>
       </div>
-
-      <div class="actions">
-        <div class="action" onclick="go('../dashboard/feedback.html')">Feedback</div>
-        <div class="action" onclick="go('../dashboard/registro.html')">Registrar</div>
-        <div class="action" onclick="logout()">Sair</div>
+      <div class="field">
+        <label>Email</label>
+        <input id="inputEmail" disabled>
       </div>
+      <div class="field">
+        <label>Função</label>
+        <input id="inputFuncao" disabled>
+      </div>
+    </div>
+
+    <!-- HISTORICO VIP -->
+    <div class="tab-content">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Produto</th>
+            <th>Início</th>
+            <th>Fim</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="vipTableBody"></tbody>
+      </table>
     </div>
 
   </div>
 </div>
 
 <script>
-// 🔹 Cache leve
-const usuariosCache = JSON.parse(localStorage.getItem('usuarios')) || [];
-const fotosCache = JSON.parse(localStorage.getItem('fotos') || '{}');
-const userEmail = localStorage.getItem('email');
-const user = usuariosCache.find(u => u.email === userEmail) || {};
+// ABAS
+function openTab(index){
+  document.querySelectorAll('.tab').forEach((t,i)=> t.classList.toggle('active',i===index));
+  document.querySelectorAll('.tab-content').forEach((c,i)=> c.classList.toggle('active',i===index));
+}
 
-// 🔹 DOM
-const nomeEl = document.getElementById('nome');
-const cargoEl = document.getElementById('cargo');
-const emailEl = document.getElementById('email');
-const funcaoEl = document.getElementById('funcao');
-const tempoEl = document.getElementById('tempo');
+// FOTO
 const fotoEl = document.getElementById('foto');
-const uploadEl = document.getElementById('upload');
+fotoEl.onclick = () => {
+  const fileInput = document.createElement('input');
+  fileInput.type='file';
+  fileInput.accept='image/*';
+  fileInput.onchange = e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=> {
+      fotoEl.src = reader.result;
+      user.foto = reader.result;
+      salvarUsuarios();
+    };
+    reader.readAsDataURL(file);
+  };
+  fileInput.click();
+};
 
-function initProfile(){
-  checkAuth(); 
-  renderProfile();
-}
+// DADOS DO USUÁRIO
+const emailLogado = localStorage.getItem('email');
+const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+const user = usuarios.find(u => u.email === emailLogado) || {};
 
-function renderProfile(){
-  nomeEl.innerText = user.nome || '—';
-  cargoEl.innerText = user.role || '—';
-  emailEl.innerText = user.email || '—';
-  funcaoEl.innerText = user.funcao || '—';
-  tempoEl.innerText = 'calculando...';
+// FUNÇÃO PARA CALCULAR TEMPO EM ANOS E MESES
+function calcularTempoEquipe(inicioTimestamp){
+  const inicio = new Date(inicioTimestamp);
+  const agora = new Date();
 
-  // Foto async
-  requestAnimationFrame(()=>{
-    if(fotosCache[userEmail]) fotoEl.src = fotosCache[userEmail];
-  });
+  let anos = agora.getFullYear() - inicio.getFullYear();
+  let meses = agora.getMonth() - inicio.getMonth();
 
-  // Tempo de equipe async
-  setTimeout(()=>{
-    const inicio = user.inicio || Date.now();
-    const dias = Math.floor((Date.now() - inicio) / 86400000);
-    tempoEl.innerText = dias + ' dias';
-  }, 10);
-}
-
-// Upload de foto
-uploadEl.onchange = e =>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    fotosCache[userEmail] = reader.result; 
-    localStorage.setItem('fotos', JSON.stringify(fotosCache));
-    fotoEl.src = reader.result;
+  if(agora.getDate() < inicio.getDate()){
+    meses -= 1;
   }
-  reader.readAsDataURL(file);
+  if(meses < 0){
+    anos -= 1;
+    meses += 12;
+  }
+
+  return { anos, meses };
 }
 
-function go(p){ location.href=p; }
-</script>
+// ATUALIZA PERFIL
+function atualizarPerfil() {
+  document.getElementById('nome').innerText = user.nome || 'Usuário';
+  document.getElementById('inputNome').value = user.nome || '';
+  document.getElementById('inputEmail').value = user.email || '';
+  document.getElementById('inputFuncao').value = user.funcao || '';
+  document.getElementById('cargoStatus').innerText = user.role || 'Cargo';
 
+  // TEMPO DE EQUIPE
+  const { anos, meses } = calcularTempoEquipe(user.inicio || Date.now());
+  document.getElementById('tempoEquipe').innerText = `Tempo de equipe: ${anos} anos, ${meses} meses`;
+
+  // VIPs
+  atualizarVIPs(user.vips || []);
+}
+
+// ATUALIZA VIPS
+function atualizarVIPs(vips){
+  const tbody = document.getElementById('vipTableBody');
+  if(vips.length === 0){
+    tbody.innerHTML = `<tr><td colspan="5">Nenhum VIP registrado</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = vips.map(vip=>{
+    const statusClass = vip.status.toLowerCase();
+    return `
+      <tr>
+        <td>${vip.id}</td>
+        <td>${vip.produto}</td>
+        <td>${vip.inicio}</td>
+        <td>${vip.fim}</td>
+        <td><span class="status-tag ${statusClass}">${vip.status.toUpperCase()}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// SALVA USUÁRIOS
+function salvarUsuarios(){
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+}
+
+// Atualiza tempo de equipe a cada hora
+setInterval(() => {
+  const { anos, meses } = calcularTempoEquipe(user.inicio || Date.now());
+  document.getElementById('tempoEquipe').innerText = `Tempo de equipe: ${anos} anos, ${meses} meses`;
+}, 3600000);
+
+// Inicializa perfil
+atualizarPerfil();
+
+// Atualiza automaticamente se houver mudanças de cargos
+window.addEventListener('cargosAtualizados', atualizarPerfil);
+
+</script>
 </body>
 </html>

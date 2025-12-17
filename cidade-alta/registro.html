@@ -2,13 +2,59 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Cadastrar • Cidade Alta</title>
+<title>Cadastro</title>
 <link rel="stylesheet" href="./css/global.css">
-<script src="./js/users.js"></script>
+<link rel="icon" href="https://cidadealta.gg/favicon.svg" type="image/svg+xml">
+
+<script>
+// Função para criar usuário e salvar no localStorage
+function createUser({ nome, email, senha }) {
+  const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+  // Verifica se o email já existe
+  if (usuarios.some(u => u.email === email)) return false;
+
+  // Cria novo usuário com role padrão "User"
+  const novoUsuario = {
+    nome: nome,
+    email: email,
+    senha: senha,
+    role: 'User',      // cargo padrão
+    funcao: '',
+    inicio: Date.now(),
+    vips: []
+  };
+
+  usuarios.push(novoUsuario);
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+  return true;
+}
+
+// Função chamada ao clicar em "Cadastrar"
+function register() {
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value.trim();
+
+  if (!nome || !email || !senha) {
+    alert('Preencha todos os campos');
+    return;
+  }
+
+  const ok = createUser({ nome, email, senha });
+
+  if (!ok) {
+    alert('Email já cadastrado');
+    return;
+  }
+
+  alert('Conta criada com sucesso!');
+  location.href = './login.html';
+}
+</script>
 </head>
 
 <body>
-
 <main style="max-width:360px;margin:auto;padding-top:20vh">
   <div class="card">
     <h2>Cadastrar</h2><br>
@@ -20,29 +66,5 @@
     <div class="card" onclick="register()">Cadastrar</div>
   </div>
 </main>
-
-<script>
-function register(){
-  const nome = document.getElementById('nome').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const senha = document.getElementById('senha').value.trim();
-
-  if(!nome || !email || !senha){
-    alert('Preencha todos os campos');
-    return;
-  }
-
-  const ok = createUser({ nome, email, senha });
-
-  if(!ok){
-    alert('Email já cadastrado');
-    return;
-  }
-
-  alert('Conta criada com sucesso');
-  location.href = './login.html';
-}
-</script>
-
 </body>
 </html>

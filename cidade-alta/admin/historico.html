@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Histórico de VIPs • Cidade Alta</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://cidadealta.gg/favicon.svg" type="image/svg+xml">
+<style>
+body { margin:0; font-family:'Comfortaa',sans-serif; background:#0b0b0b; color:#fff; }
+header { background:#121212; padding:18px 30px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; }
+header h1 { font-size:1.1rem; }
+header a { color:#ffbb00; text-decoration:none; font-weight:700; font-size:.9rem; }
+.container { max-width:1000px; margin:60px auto; padding:0 20px; }
+h2 { margin-bottom:30px; font-size:1.2rem; }
+table { width:100%; border-collapse:collapse; background:#121212; border-radius:12px; overflow:hidden; }
+th, td { padding:12px; text-align:left; border-bottom:1px solid #222; font-size:.9rem; }
+th { background:#1a1a1a; }
+.status-tag { padding:4px 10px; border-radius:8px; font-size:.75rem; font-weight:700; display:inline-block; }
+.status-Pendente { background:#ffbb00; color:#000; }
+.status-Aprovado { background:#00ff88; color:#000; }
+.status-Rejeitado { background:#ff5555; color:#000; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Histórico de VIPs</h1>
+  <a href="vip.html">← Voltar ao Painel VIP</a>
+</header>
+
+<div class="container">
+  <h2>VIPs Adicionados</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Usuário</th>
+        <th>Tipo</th>
+        <th>Início</th>
+        <th>Término</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="vipBody">
+      <!-- VIPs serão inseridos aqui via JS -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+// Puxar VIPs e usuários
+const vipList = JSON.parse(localStorage.getItem('vip')) || [];
+const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+// Função para formatar timestamp
+function formatDate(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+}
+
+// Preencher tabela
+const tbody = document.getElementById('vipBody');
+vipList.forEach(vip => {
+  const user = usuarios.find(u => u.email === vip.email);
+  const nome = user ? user.nome : vip.email;
+  const inicio = formatDate(vip.inicio);
+  const fim = formatDate(vip.fim);
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${nome}</td>
+    <td>${vip.tipo}</td>
+    <td>${inicio}</td>
+    <td>${fim}</td>
+    <td><span class="status-tag status-${vip.status}">${vip.status}</span></td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+
+</body>
+</html>
