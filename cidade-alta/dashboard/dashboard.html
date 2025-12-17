@@ -196,12 +196,12 @@ function getUser() {
 }
 
 function checkAuth() {
-  if(!localStorage.getItem('email')) location.href='./dashboard.html';
+  if(!localStorage.getItem('email')) location.href='./dashboard/dashboard.html';
 }
 
 function logout() {
   localStorage.removeItem('email');
-  location.href='./login.html';
+  location.href='./dashboard/login.html';
 }
 
 function go(p) {
