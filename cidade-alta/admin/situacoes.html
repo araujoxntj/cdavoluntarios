@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Situações • Painel</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+body{ background:#0b0b0b; color:#fff; font-family:'Comfortaa',sans-serif; margin:0; }
+header{ background:#121212; padding:16px 30px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; }
+header h1{ font-size:1.1rem; }
+header button{ background:#ffbb00; border:none; color:#000; padding:6px 12px; border-radius:8px; cursor:pointer; font-weight:700; }
+.container{ max-width:1200px; margin:40px auto; padding:0 20px; }
+table{ width:100%; border-collapse:collapse; background:#151515; border-radius:14px; overflow:hidden; }
+th, td{ padding:14px; text-align:left; font-size:.85rem; border-bottom:1px solid #222; }
+th{ background:#1c1c1c; font-weight:700; }
+.btn{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; font-weight:700; }
+.btn-view{ background:#ffbb00; color:#000; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Situações</h1>
+  <button onclick="go('../admin/painel.html')">← Voltar</button>
+</header>
+
+<div class="container">
+<table id="tabela">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Status</th>
+      <th>Data</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<script>
+// Dados
+let situacoes = JSON.parse(localStorage.getItem('situacoes')) || [];
+const tbody = document.querySelector('tbody');
+
+function renderTable(){
+  tbody.innerHTML = situacoes.map(s=>`
+    <tr>
+      <td>${s.id}</td>
+      <td>${s.titulo}</td>
+      <td>${s.status}</td>
+      <td>${s.data}</td>
+      <td><button class="btn btn-view" onclick="viewSituacao(${s.id})">Ver</button></td>
+    </tr>
+  `).join('');
+}
+
+function viewSituacao(id){
+  const s = situacoes.find(st=>st.id===id);
+  alert(`Título: ${s.titulo}\nStatus: ${s.status}\nData: ${s.data}\nDescrição:\n${s.descricao}`);
+}
+
+function go(p){ location.href=p; }
+
+renderTable();
+</script>
+</body>
+</html>

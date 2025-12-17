@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Admin • Usuários</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+body{ margin:0; font-family:'Comfortaa',sans-serif; background:#0b0b0b; color:#fff; }
+header{ background:#121212; padding:16px 30px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; }
+header h1{ font-size:1.1rem; }
+header a{ color:#ffbb00; text-decoration:none; font-size:.9rem; font-weight:700; }
+.container{ max-width:1200px; margin:40px auto; padding:0 20px; }
+table{ width:100%; border-collapse:collapse; background:#151515; border-radius:14px; overflow:hidden; }
+th, td{ padding:14px; text-align:left; font-size:.85rem; }
+th{ background:#1c1c1c; font-weight:700; }
+tr{ border-bottom:1px solid #222; }
+select,input{ background:#111; color:#fff; border:1px solid #333; border-radius:8px; padding:6px 8px; font-size:.8rem; }
+.btn{ padding:6px 10px; border-radius:8px; border:none; font-size:.75rem; font-weight:700; cursor:pointer; margin-right:6px; }
+.btn-save{ background:#ffbb00; color:#000; }
+.btn-reset{ background:#444; color:#fff; }
+.btn-del{ background:#b22222; color:#fff; }
+.avatar{ width:32px; height:32px; border-radius:50%; object-fit:cover; margin-right:8px; vertical-align:middle; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Usuários</h1>
+  <a href="painel.html">← Voltar</a>
+</header>
+
+<div class="container">
+<table id="tabela">
+  <thead>
+    <tr>
+      <th>Foto</th>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Cargo</th>
+      <th>Função</th>
+      <th>Tempo</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<script>
+let usuariosCache = JSON.parse(localStorage.getItem('usuarios')) || [];
+let fotosCache = JSON.parse(localStorage.getItem('fotos') || '{}');
+const tbody = document.querySelector('tbody');
+
+function renderTable(){
+  const cargosSalvos = JSON.parse(localStorage.getItem('cargos'))?.map(c => c.nome) || [];
+  tbody.innerHTML = usuariosCache.map((u,i)=>{
+    const inicio = u.inicio || Date.now();
+    const dias = Math.floor((Date.now() - inicio) / 86400000);
+    const foto = fotosCache[u.email] || 'https://via.placeholder.com/32';
+    const cargos = Array.from(new Set([...cargosSalvos, u.role || 'User', 'User','Moderador','CM','Leader']));
+
+    return `
+    <tr>
+      <td><img src="${foto}" class="avatar"></td>
+      <td>${u.nome}</td>
+      <td>${u.email}</td>
+      <td>
+        <select onchange="setRole(${i}, this.value)">
+          ${cargos.map(r => `<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </td>
+      <td><input value="${u.funcao||''}" onchange="setFuncao(${i}, this.value)"></td>
+      <td>${dias} dias</td>
+      <td>
+        <button class="btn btn-reset" onclick="reset(${i})">Senha</button>
+        <button class="btn btn-del" onclick="del(${i})">Excluir</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function setRole(i,v){ usuariosCache[i].role=v; save(); }
+function setFuncao(i,v){ usuariosCache[i].funcao=v; save(); }
+function reset(i){ const senha=prompt('Nova senha:'); if(!senha) return; usuariosCache[i].senha=senha; save(); alert('Senha redefinida'); }
+function del(i){ if(!confirm('Excluir este usuário?')) return; usuariosCache.splice(i,1); save(); renderTable(); }
+function save(){ localStorage.setItem('usuarios', JSON.stringify(usuariosCache)); }
+
+// 🔹 Atualiza todos os selects de cargos dinamicamente
+function atualizarSelects(){
+  const cargosSalvos = JSON.parse(localStorage.getItem('cargos'))?.map(c => c.nome) || [];
+  const cargos = Array.from(new Set([...cargosSalvos, 'User','Moderador','CM','Leader']));
+  document.querySelectorAll('tbody tr').forEach((tr, i)=>{
+    const select = tr.querySelector('select');
+    const usuario = usuariosCache[i];
+    const cargoAtual = usuario.role || 'User';
+    select.innerHTML = cargos.map(r => `<option ${cargoAtual===r?'selected':''}>${r}</option>`).join('');
+  });
+}
+
+// 🔹 Escuta evento disparado pelo Admin
+window.addEventListener('cargosAtualizados', atualizarSelects);
+
+// Render inicial
+renderTable();
+</script>
+
+</body>
+</html>

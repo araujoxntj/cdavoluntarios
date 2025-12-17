@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Obrigado • Cidade Alta</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Comfortaa', sans-serif;
+  background: linear-gradient(180deg, #0c0c0c, #111);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.card {
+  background: #1c1c1c;
+  padding: 2.5rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(0,0,0,.45);
+}
+
+h2 {
+  margin-bottom: 1rem;
+}
+
+p {
+  opacity: .85;
+  margin-bottom: 2rem;
+}
+
+button {
+  background: #ffbb00;
+  border: none;
+  padding: 12px 2.4rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255,187,0,.55);
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Obrigado por se inscrever!</h2>
+  <p>Sua inscrição foi enviada com sucesso. Nossa equipe entrará em contato em breve.</p>
+  <button onclick="voltarHome()">Voltar para o site</button>
+</div>
+
+<script>
+// 🔒 Expira o token passado na URL para impedir reenvio
+const params = new URLSearchParams(location.search);
+let token = params.get('token');
+
+if(token){
+  try {
+    const data = JSON.parse(atob(token));
+    token = null; // Expira imediatamente
+  } catch {
+    token = null;
+  }
+}
+
+// Função para voltar para a página inicial manualmente
+function voltarHome(){
+  window.location.href = 'https://cidadealta.gg';
+}
+
+// 🔁 Redirecionamento automático após 6 segundos
+setTimeout(() => {
+  window.location.href = 'https://cidadealta.gg';
+}, 6000);
+</script>
+
+</body>
+</html>

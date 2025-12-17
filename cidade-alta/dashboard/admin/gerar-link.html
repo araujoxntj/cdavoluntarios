@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Gerar Link • Voluntários</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+body{
+  background:#0d0d0d;
+  color:#fff;
+  font-family:Comfortaa;
+  padding:2rem;
+}
+button{
+  padding:.6rem 1.2rem;
+  border-radius:8px;
+  background:#ffbb00;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+}
+input{
+  padding:.5rem;
+  border-radius:6px;
+  border:none;
+}
+.box{
+  max-width:420px;
+  margin:auto;
+  background:#111;
+  padding:2rem;
+  border-radius:14px;
+}
+.link{
+  margin-top:1rem;
+  word-break:break-all;
+  font-size:.9rem;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Gerar Link de Inscrição</h2>
+
+  <label>Válido por (horas)</label><br>
+  <input type="number" id="horas" value="24"><br><br>
+
+  <button onclick="gerar()">Gerar Link</button>
+
+  <div class="link" id="resultado"></div>
+</div>
+
+<script>
+const role = localStorage.getItem('role');
+if(!['CM','Leader'].includes(role)) document.body.innerHTML = '';
+
+function gerar(){
+  const horas = document.getElementById('horas').value;
+  const exp = Date.now() + horas * 60 * 60 * 1000;
+
+  const token = btoa(JSON.stringify({ exp }));
+  const link = `${location.origin}/voluntarios/inscricao.html?token=${token}`;
+
+  document.getElementById('resultado').innerHTML = `<strong>Link:</strong><br>${link}`;
+}
+</script>
+
+</body>
+</html>

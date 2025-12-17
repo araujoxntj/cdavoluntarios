@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Feedbacks • Painel</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+body{ background:#0b0b0b; color:#fff; font-family:'Comfortaa',sans-serif; margin:0; }
+header{ background:#121212; padding:16px 30px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; }
+header h1{ font-size:1.1rem; }
+header button{ background:#ffbb00; border:none; color:#000; padding:6px 12px; border-radius:8px; cursor:pointer; font-weight:700; }
+.container{ max-width:1200px; margin:40px auto; padding:0 20px; }
+table{ width:100%; border-collapse:collapse; background:#151515; border-radius:14px; overflow:hidden; }
+th, td{ padding:14px; text-align:left; font-size:.85rem; border-bottom:1px solid #222; }
+th{ background:#1c1c1c; font-weight:700; }
+.btn{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; font-weight:700; }
+.btn-view{ background:#ffbb00; color:#000; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Feedbacks</h1>
+  <button onclick="go('../admin/painel.html')">← Voltar</button>
+</header>
+
+<div class="container">
+<table id="tabela">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Remetente</th>
+      <th>Mensagem</th>
+      <th>Data</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<script>
+let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+const tbody = document.querySelector('tbody');
+
+function renderTable(){
+  if(feedbacks.length === 0){
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center;color:#777">
+          Nenhum feedback recebido
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = feedbacks.map(f => `
+    <tr>
+      <td>${f.id}</td>
+      <td>${f.remetente}</td>
+      <td>${f.mensagem.substring(0,40)}${f.mensagem.length>40?'...':''}</td>
+      <td>${f.data}</td>
+      <td>
+        <button class="btn btn-view" onclick="viewFeedback(${f.id})">Ver</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function viewFeedback(id){
+  const f = feedbacks.find(x => x.id === id);
+  if(!f) return;
+
+  alert(
+`Remetente: ${f.remetente}
+Data: ${f.data}
+
+Mensagem:
+${f.mensagem}`
+  );
+}
+
+renderTable();
+</script>
+
+</script>
+</body>
+</html>

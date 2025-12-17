@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Login • Cidade Alta</title>
+<link rel="stylesheet" href="./css/global.css">
+<script src="./js/auth.js"></script>
+</head>
+
+<body>
+
+<main style="max-width:360px;margin:auto;padding-top:20vh">
+  <div class="card">
+    <h2>Entrar</h2><br>
+
+    <input id="email" placeholder="Email"><br><br>
+    <input id="senha" type="password" placeholder="Senha"><br><br>
+
+    <div class="card" onclick="login()">Entrar</div>
+  </div>
+</main>
+
+<script>
+function login(){
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value.trim();
+
+  const ok = loginUser(email, senha);
+
+  if(!ok){
+    alert('Email ou senha inválidos');
+    return;
+  }
+
+  location.href = './dashboard/dashboard.html';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Admin • Configurações</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+body{ margin:0; font-family:'Comfortaa',sans-serif; background:#0b0b0b; color:#fff; }
+header{ background:#121212; padding:16px 30px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; }
+header h1{ font-size:1.1rem; }
+header a{ color:#ffbb00; text-decoration:none; font-size:.9rem; font-weight:700; }
+.container{ max-width:900px; margin:50px auto; padding:0 20px; }
+.card{ background:#151515; border-radius:16px; padding:26px; border:1px solid #222; }
+.card h2{ margin-bottom:10px; font-size:1.1rem; }
+.card p{ font-size:.85rem; opacity:.75; margin-bottom:20px; }
+label{ font-size:.8rem; opacity:.8; }
+textarea{ width:100%; min-height:220px; background:#0f0f0f; border:1px solid #333; border-radius:12px; padding:14px; color:#fff; font-family:'Comfortaa',sans-serif; font-size:.85rem; resize:vertical; }
+.footer{ display:flex; justify-content:space-between; align-items:center; margin-top:20px; }
+.destino{ font-size:.8rem; opacity:.7; }
+button{ background:#ffbb00; border:none; padding:8px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.8rem; }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Configurações</h1>
+  <a href="index.html">← Voltar</a>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Email de Aprovação</h2>
+    <p>
+      Texto enviado automaticamente ao voluntário <b>APENAS quando aprovado</b>.
+      Reprovação não envia email.
+    </p>
+
+    <label>Conteúdo do email</label>
+    <textarea id="emailText">
+Olá, {NOME}!
+
+Temos o prazer de informar que você foi APROVADO para a próxima fase do processo de voluntários da Cidade Alta.
+
+Em breve nossa equipe entrará em contato com você pelo Discord.
+
+Atenciosamente,
+Equipe Cidade Alta
+    </textarea>
+
+    <div class="footer">
+      <div class="destino">
+        📧 Destino: <b>moderacao@cidadealta.gg</b>
+      </div>
+
+      <button onclick="salvar()">Salvar</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// 🔐 Proteção básica
+if(!localStorage.getItem('token')){
+  location.href='../login.html';
+}
+
+// 🔄 Carregar texto salvo
+fetch('http://localhost:3000/api/config/email',{
+  headers:{ Authorization:'Bearer '+localStorage.getItem('token') }
+})
+.then(r=>r.json())
+.then(data=>{
+  if(data.texto){
+    document.getElementById('emailText').value = data.texto;
+  }
+});
+
+// 💾 Salvar texto
+function salvar(){
+  fetch('http://localhost:3000/api/config/email',{
+    method:'PUT',
+    headers:{
+      'Content-Type':'application/json',
+      Authorization:'Bearer '+localStorage.getItem('token')
+    },
+    body:JSON.stringify({
+      texto: document.getElementById('emailText').value
+    })
+  }).then(()=>{
+    alert('Texto do email atualizado com sucesso!');
+  });
+}
+
+// ✅ Função para enviar email para um voluntário específico
+// Recebe { nome, email }
+async function enviarEmailAprovacao(voluntario){
+  const textoSalvo = document.getElementById('emailText').value;
+  const textoPersonalizado = textoSalvo.replace(/{NOME}/g, voluntario.nome);
+
+  const response = await fetch('http://localhost:3000/api/enviaremail', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      Authorization:'Bearer '+localStorage.getItem('token')
+    },
+    body: JSON.stringify({
+      para: voluntario.email,
+      assunto: 'Aprovação Voluntário - Cidade Alta',
+      texto: textoPersonalizado
+    })
+  });
+
+  if(response.ok){
+    console.log(`Email enviado para ${voluntario.nome}`);
+  } else {
+    console.error('Erro ao enviar email', await response.text());
+  }
+}
+
+// Exemplo de uso:
+// enviarEmailAprovacao({nome:'Bruno', email:'bruno@exemplo.com'});
+</script>
+
+</body>
+</html>

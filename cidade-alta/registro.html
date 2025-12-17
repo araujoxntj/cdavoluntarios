@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cadastrar • Cidade Alta</title>
+<link rel="stylesheet" href="./css/global.css">
+<script src="./js/users.js"></script>
+</head>
+
+<body>
+
+<main style="max-width:360px;margin:auto;padding-top:20vh">
+  <div class="card">
+    <h2>Cadastrar</h2><br>
+
+    <input id="nome" placeholder="Nome"><br><br>
+    <input id="email" placeholder="Email"><br><br>
+    <input id="senha" type="password" placeholder="Senha"><br><br>
+
+    <div class="card" onclick="register()">Cadastrar</div>
+  </div>
+</main>
+
+<script>
+function register(){
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value.trim();
+
+  if(!nome || !email || !senha){
+    alert('Preencha todos os campos');
+    return;
+  }
+
+  const ok = createUser({ nome, email, senha });
+
+  if(!ok){
+    alert('Email já cadastrado');
+    return;
+  }
+
+  alert('Conta criada com sucesso');
+  location.href = './login.html';
+}
+</script>
+
+</body>
+</html>

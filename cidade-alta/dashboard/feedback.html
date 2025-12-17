@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Feedback • Cidade Alta</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Comfortaa', sans-serif;
+  background: linear-gradient(180deg, #0c0c0c, #111);
+  color: #fff;
+}
+
+header {
+  padding: 1.2rem 2rem;
+  background: #151515;
+  border-bottom: 1px solid #222;
+}
+
+header {
+  padding: 1.2rem 2rem;
+  background: #151515;
+  border-bottom: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-back {
+  background: transparent;
+  border: 1px solid #333;
+  color: #ffbb00;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.btn-back:hover {
+ background: #ffbb00;
+  color: #000;
+  box-shadow: 0 0 10px rgba(255,187,0,.5);
+}
+
+main {
+  padding: 2rem;
+  max-width: 700px;
+  margin: auto;
+}
+
+.card {
+  background: #1c1c1c;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 0 25px rgba(0,0,0,.4);
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+}
+
+select, textarea {
+  width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  color: #fff;
+  padding: 12px;
+  margin-bottom: 1rem;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+button {
+  background: #ffbb00;
+  border: none;
+  padding: 12px 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255,187,0,.5);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Enviar Feedback</h2>
+  <button class="btn-back" onclick="go('dashboard.html')">
+    ← Dashboard
+  </button>
+  </header>
+<main>
+  
+  <div class="card">
+
+    <label>Tipo de feedback</label>
+    <select id="tipo">
+      <option>Crítica</option>
+      <option>Elogio</option>
+      <option>Conselho</option>
+    </select>
+
+    <label>Mensagem</label>
+    <textarea id="mensagem" placeholder="Descreva seu feedback..."></textarea>
+
+    <button onclick="enviar()">Enviar Feedback</button>
+
+  </div>
+</main>
+
+<script>
+function go(pagina) {
+  window.location.href = pagina;
+}
+
+function enviar() {
+  const tipo = document.getElementById('tipo').value;
+  const mensagem = document.getElementById('mensagem').value.trim();
+
+  if (!mensagem) {
+    alert('Preencha a mensagem.');
+    return;
+  }
+
+  // 🔥 PADRÃO IGUAL AO ADMIN
+  const feedback = {
+    id: Date.now(),
+    tipo: tipo,
+    mensagem: mensagem,
+    remetente: localStorage.getItem('role') || 'Anônimo',
+    data: new Date().toLocaleString('pt-BR')
+  };
+
+  // 🔥 MESMA KEY QUE O ADMIN LÊ
+  let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+  feedbacks.push(feedback);
+  localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+  alert('Feedback enviado com sucesso!');
+  document.getElementById('mensagem').value = '';
+}
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+Vamos começar do 0. Esse e meu codigo index.html. Faça tudo que eu pedi, porém separe por outros html para não ficar tudo junto. QUERO TUDO QUE PEDI
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cidade Alta • Moderação</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Comfortaa', sans-serif;
+  background: #000;
+  overflow: hidden;
+}
+
+#video-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none; /* 👈 ESSENCIAL */
+}
+
+#video-bg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.35);
+  pointer-events: none; /* 👈 ESSENCIAL */
+}
+
+
+
+.conteudo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  animation: fadeIn 1.2s ease;
+}
+
+.logo {
+  width: 90px;
+  margin-bottom: 1.5rem;
+  animation: zoomIn 1.5s ease;
+}
+
+h1 {
+  margin-bottom: 2rem;
+}
+
+.botoes {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.botao {
+  padding: 1rem 2.2rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000;
+  background: #ffbb00;
+  border-radius: 14px;
+  text-decoration: none;
+  box-shadow: 0 0 12px #ffbb00;
+  transition: .3s ease;
+}
+
+.botao:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px #ffbb00;
+}
+
+#btn-som {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: .7rem 1.4rem;
+  background: #111;
+  color: #fff;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  z-index: 1000;
+}
+
+#btn-som:hover {
+  background: #333;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎥 Vídeo de fundo -->
+<div id="video-bg">
+  <video autoplay loop muted playsinline preload="auto">
+    <source src="./video/cda2.mp4" type="video/mp4">
+  </video>
+</div>
+
+
+<!-- 🎵 Música -->
+<audio id="musica" loop autoplay muted>
+  <source src="./video/cda3.mp3" type="audio/mp3">
+</audio>
+
+
+
+<button id="btn-som">Ativar Som</button>
+
+<!-- 🌐 Conteúdo -->
+<div class="conteudo">
+  <img src="https://cidadealta.gg/favicon.svg" class="logo" alt="Cidade Alta">
+  <h1>Cidade Alta • Moderação</h1>
+
+  <div class="botoes">
+    <a href="./login.html" class="botao">Entrar</a>
+    <a href="./register.html" class="botao">Cadastrar</a>
+  </div>
+</div> <!-- 👈 FECHAMENTO QUE FALTAVA -->
+
+<script>
+  const btn = document.getElementById('btn-som');
+  const musica = document.getElementById('musica');
+
+  btn.onclick = () => {
+    musica.muted = false;
+    musica.play();
+    btn.textContent = 'Som ativado';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+  };
+</script>
+
+</body>
+</html>
+

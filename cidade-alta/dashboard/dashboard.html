@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard • Cidade Alta</title>
+<link rel="stylesheet" href="../css/global.css">
+<script src="../js/auth.js"></script>
+</head>
+
+<body onload="checkAuth(); loadDashboard()">
+
+<header class="top">
+  <img src="https://cidadealta.gg/favicon.svg" onclick="go('../admin/painel.html')" class="logo" alt="Cidade Alta">
+  <div class="user-mini">
+    <span id="miniNome"></span>
+    <button class="btn-small" onclick="logout()">Sair</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 🔹 RESUMO PERFIL -->
+  <section class="panel">
+    <h2>👤 Sua Conta</h2>
+
+    <div class="resume">
+      <div>
+        <span>Nome</span>
+        <strong id="nome"></strong>
+      </div>
+      <div>
+        <span>Cargo</span>
+        <strong id="cargo"></strong>
+      </div>
+      <div>
+        <span>Função</span>
+        <strong id="funcao"></strong>
+      </div>
+    </div>
+
+    <button class="btn-small" onclick="go('perfil.html')">
+      Ver perfil completo →
+    </button>
+  </section>
+
+  <!-- 🔹 ATALHOS -->
+  <section class="panel">
+    <h2>⚡ Ações rápidas</h2>
+
+    <div class="actions">
+      <div class="action" onclick="go('../dashboard/feedback.html')">
+        📊 Feedback
+      </div>
+
+      <div class="action" onclick="go('../dashboard/registro.html')">
+        📝 Registrar Situação
+      </div>
+
+      <div class="action" onclick="go('../dashboard/indicacao.html')">
+        ⭐ Indicar Voluntário
+      </div>
+
+      <div class="action admin" id="adminBtn"
+           onclick="go('../admin/index.html')">
+        🛠️ Administração
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+function loadDashboard(){
+  const user = getUser();
+
+  document.getElementById('miniNome').innerText = user.nome;
+  document.getElementById('nome').innerText = user.nome;
+  document.getElementById('cargo').innerText = user.role;
+  document.getElementById('funcao').innerText = user.funcao;
+
+  // 🔐 admin only
+  if(!['CM','Leader'].includes(user.role)){
+    document.getElementById('adminBtn').style.display = 'none';
+  }
+}
+
+function go(p){
+  location.href = p;
+}
+</script>
+
+</body>
+</html>

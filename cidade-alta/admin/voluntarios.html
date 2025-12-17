@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Admin • Voluntários</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+(function(){
+  emailjs.init("TLGevlWDzSZpkqA1w");
+})();
+</script>
+
+
+<style>
+body{
+  margin:0;
+  font-family:'Comfortaa',sans-serif;
+  background:#0b0b0b;
+  color:#fff;
+}
+
+header{
+  background:#121212;
+  padding:16px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #222;
+}
+
+header h1{
+  font-size:1.1rem;
+}
+
+header a{
+  color:#ffbb00;
+  text-decoration:none;
+  font-size:.9rem;
+  font-weight:700;
+}
+
+.container{
+  max-width:1100px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+.card{
+  background:#151515;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 0 20px rgba(0,0,0,.5);
+  margin-bottom:30px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#151515;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+th,td{
+  padding:14px;
+  text-align:left;
+  font-size:.85rem;
+}
+
+th{
+  background:#1c1c1c;
+}
+
+tr{
+  border-bottom:1px solid #222;
+}
+
+.status{
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:.7rem;
+  font-weight:700;
+}
+
+.pendente{ background:#444; }
+.aprovado{ background:#1e7e34; }
+.reprovado{ background:#b22222; }
+
+.btn{
+  padding:6px 12px;
+  border-radius:8px;
+  border:none;
+  font-size:.75rem;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn-ok{ background:#ffbb00; color:#000; }
+.btn-no{ background:#444; color:#fff; margin-left:6px; }
+
+input{
+  background:#111;
+  border:1px solid #333;
+  color:#fff;
+  padding:8px;
+  border-radius:8px;
+  margin:0 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Voluntários</h1>
+  <a href="painel.html">← Voltar</a>
+</header>
+
+<div class="container">
+
+  <!-- GERAR LINK -->
+  <div class="card">
+    <h2>Gerar Link para Formulário</h2>
+    <label>Validade (horas):</label>
+    <input type="number" id="horas" value="24" min="1">
+    <button class="btn btn-ok" onclick="gerarLink()">Gerar</button>
+    <div id="linkGerado" style="margin-top:10px;color:#ffbb00"></div>
+  </div>
+
+  <!-- TABELA -->
+  <table id="vols">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Idade</th>
+      <th>Disponibilidade</th>
+      <th>Data</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="card">
+  <h2>Inscrições</h2>
+
+  <button class="btn btn-ok" onclick="ativarInscricoes()">🟢 Ativar</button>
+  <button class="btn btn-no" onclick="desativarInscricoes()">🔴 Desativar</button>
+
+  <p id="statusInscricao" style="margin-top:10px;font-weight:700"></p>
+</div>
+
+<div class="card">
+  <h2>Senha única</h2>
+
+  <label>Validade (minutos):</label>
+  <input type="number" id="senhaTempo" value="30" min="1">
+
+  <button class="btn btn-ok" onclick="gerarSenha()">🔐 Gerar Senha</button>
+
+  <div id="senhaGerada" style="margin-top:10px;color:#ffbb00"></div>
+</div>
+
+
+
+</div>
+
+<script>
+// 🔄 Carregar voluntários (localStorage)
+function carregarVoluntarios(){
+  const vols = JSON.parse(localStorage.getItem('voluntarios')) || [];
+  const tbody = document.querySelector('#vols tbody');
+
+  if(vols.length === 0){
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center;color:#777">
+          Nenhum voluntário encontrado
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = vols.map(v => `
+    <tr>
+      <td>${v.nome}</td>
+      <td>${v.email}</td>
+      <td>${v.idade || '-'}</td>
+      <td>${v.disponibilidade || '-'}</td>
+      <td>${new Date(v.data).toLocaleDateString()}</td>
+      <td>
+        <span class="status ${v.status}">
+          ${v.status.toUpperCase()}
+        </span>
+      </td>
+      <td>
+        ${v.status === 'pendente' ? `
+          <button class="btn btn-ok" onclick="aprovar(${v.id})">Aprovar</button>
+          <button class="btn btn-no" onclick="reprovar(${v.id})">Reprovar</button>
+        ` : '—'}
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ✅ Aprovar
+function aprovar(id){
+  if(!confirm('Aprovar voluntário?')) return;
+
+  const vols = JSON.parse(localStorage.getItem('voluntarios')) || [];
+  const v = vols.find(v => v.id === id);
+
+  if(!v) return;
+
+  if(!v.email || !v.email.includes('@')){
+    alert('Email do voluntário inválido.');
+    return;
+  }
+
+  v.status = 'aprovado';
+  localStorage.setItem('voluntarios', JSON.stringify(vols));
+  carregarVoluntarios();
+
+  emailjs.send(
+    'service_0m937fj',
+    'template_ckcmhnq',
+    {
+      nome: v.nome,
+      email: v.email,               // 🔥 OBRIGATÓRIO
+      status: 'APROVADA',
+      disponibilidade: v.disponibilidade
+    }
+  )
+  .then(() => {
+    alert('Email de aprovação enviado com sucesso!');
+  })
+  .catch(err => {
+    console.error('Erro EmailJS:', err);
+    alert('Erro ao enviar email. Verifique o console.');
+  });
+}
+
+
+// ❌ Reprovar
+function reprovar(id){
+  if(!confirm('Reprovar voluntário?')) return;
+
+  const vols = JSON.parse(localStorage.getItem('voluntarios')) || [];
+  const v = vols.find(v => v.id === id);
+
+  if(v){
+    v.status = 'reprovado';
+    localStorage.setItem('voluntarios', JSON.stringify(vols));
+    carregarVoluntarios();
+  }
+}
+
+// 🚀 Inicializa
+carregarVoluntarios();
+
+// 🔗 Gerar link de inscrição (COMPLETO)
+function gerarLink(){
+  const token = btoa(JSON.stringify({
+    tipo: 'publico',
+    criadoEm: new Date().toISOString()
+  }));
+
+  const link = `${location.origin}/cidade-alta/dashboard/volunteers/inscricao.html?token=${token}`;
+
+  document.getElementById('linkGerado').innerHTML = `
+    <strong>Link público (sem expiração):</strong><br>
+
+    <input id="linkInput" value="${link}" readonly
+      style="width:100%;margin-top:6px;background:#111;border:1px solid #333;color:#fff;padding:8px;border-radius:8px"
+      onclick="this.select()">
+
+    <button class="btn btn-ok" style="margin-top:8px" onclick="copiarLink()">
+      📋 Copiar Link
+    </button>
+
+    <div style="margin-top:10px;color:#1e7e34;font-size:.8rem">
+      ✔ Link ativo • Uso ilimitado
+    </div>
+  `;
+}
+
+// 📋 Copiar link
+function copiarLink(){
+  const input = document.getElementById('linkInput');
+  input.select();
+  document.execCommand('copy');
+  alert('Link copiado!');
+}
+
+// ⏳ Contador de expiração
+function iniciarContador(exp){
+  const contador = document.getElementById('contador');
+
+  function atualizar(){
+    const restante = exp - Date.now();
+
+    if(restante <= 0){
+      contador.innerHTML = '⛔ Link expirado';
+      return;
+    }
+
+    const h = Math.floor(restante / 3600000);
+    const m = Math.floor((restante % 3600000) / 60000);
+    const s = Math.floor((restante % 60000) / 1000);
+
+    contador.innerHTML = `⏳ Expira em ${h}h ${m}m ${s}s`;
+    setTimeout(atualizar, 1000);
+  }
+
+  atualizar();
+}
+
+function atualizarStatus(){
+  const ativo = localStorage.getItem('inscricoes_ativas') !== 'false';
+  const el = document.getElementById('statusInscricao');
+
+  el.innerHTML = ativo
+    ? '🟢 Inscrições ABERTAS'
+    : '🔴 Inscrições FECHADAS';
+
+  el.style.color = ativo ? '#1e7e34' : '#b22222';
+}
+
+function ativarInscricoes(){
+  localStorage.setItem('inscricoes_ativas', 'true');
+  atualizarStatus();
+  alert('Inscrições ativadas!');
+}
+
+function desativarInscricoes(){
+  localStorage.setItem('inscricoes_ativas', 'false');
+  atualizarStatus();
+  alert('Inscrições desativadas!');
+}
+
+atualizarStatus();
+
+function gerarSenha(){
+  const minutos = Number(document.getElementById('senhaTempo').value);
+  if(!minutos || minutos <= 0){
+    alert('Tempo inválido');
+    return;
+  }
+
+  const senha = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const exp = Date.now() + (minutos * 60 * 1000);
+
+  const senhas = JSON.parse(localStorage.getItem('senhas_unicas')) || [];
+  senhas.push({
+    senha,
+    exp,
+    usada: false
+  });
+
+  localStorage.setItem('senhas_unicas', JSON.stringify(senhas));
+
+  document.getElementById('senhaGerada').innerHTML = `
+    <strong>Senha gerada:</strong><br>
+    <input value="${senha}" readonly
+      style="width:100%;margin-top:6px;background:#111;border:1px solid #333;color:#fff;padding:8px;border-radius:8px"
+      onclick="this.select()">
+    <p style="font-size:.75rem;margin-top:6px">
+      ⏳ Válida por ${minutos} minutos • Uso único
+    </p>
+  `;
+}
+
+</script>
+
+
+</body>
+</html>

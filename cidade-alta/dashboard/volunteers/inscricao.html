@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Seja Voluntário • Cidade Alta</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Comfortaa',sans-serif;
+  background:#0c0c0c;
+  color:#fff;
+}
+
+header{
+  background:#151515;
+  padding:1.4rem;
+  text-align:center;
+  border-bottom:1px solid #222;
+}
+
+main{
+  max-width:820px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+.card{
+  background:#1c1c1c;
+  padding:2rem;
+  border-radius:18px;
+  box-shadow:0 0 25px rgba(0,0,0,.4);
+}
+
+.locked{
+  opacity:.35;
+  pointer-events:none;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  background:#111;
+  border:1px solid #333;
+  border-radius:12px;
+  color:#fff;
+  margin-bottom:1.2rem;
+}
+
+textarea{ min-height:150px }
+
+button{
+  background:#ffbb00;
+  border:none;
+  padding:14px 2.6rem;
+  border-radius:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+#alerta{
+  background:#2a1f00;
+  border:1px solid #ffbb00;
+  padding:18px;
+  border-radius:14px;
+  margin-bottom:24px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Programa de Voluntários</h2>
+</header>
+
+<main>
+
+  <!-- ALERTA -->
+  <div id="alerta">
+    <h3>🚫 Inscrições Encerradas</h3>
+    <p>O processo seletivo está fechado.<br>
+    Caso possua uma <b>senha de acesso</b>, informe abaixo.</p>
+
+    <input id="senha" placeholder="Senha de acesso">
+    <button onclick="desbloquear()">Desbloquear formulário</button>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div class="card locked" id="formCard">
+
+    <label>Nome completo</label>
+    <input id="nome">
+
+    <label>Email</label>
+    <input id="email">
+
+    <label>Idade</label>
+    <input id="idade" type="number">
+
+    <label>Disponibilidade</label>
+    <select id="tempo">
+      <option>Manhã</option>
+      <option>Tarde</option>
+      <option>Noite</option>
+      <option>Integral</option>
+    </select>
+
+    <label>Por que deseja ser voluntário?</label>
+    <textarea id="motivo"></textarea>
+
+    <button onclick="enviar()">Enviar Inscrição</button>
+
+  </div>
+
+</main>
+
+<script>
+// 🔒 CONFIGURAÇÃO
+const inscricoesAtivas = localStorage.getItem('inscricoes_ativas') !== 'false';
+const SENHAS = JSON.parse(localStorage.getItem('senhas_unicas')) || [];
+
+// 🔓 SE ABERTO
+if(inscricoesAtivas){
+  document.getElementById('alerta').style.display='none';
+  document.getElementById('formCard').classList.remove('locked');
+}
+
+// 🔑 DESBLOQUEAR
+function desbloquear(){
+  const senhaDigitada = document.getElementById('senha').value.trim().toUpperCase();
+  const agora = Date.now();
+
+  const senhas = JSON.parse(localStorage.getItem('senhas_unicas')) || [];
+
+  const senhaValida = senhas.find(s =>
+    s.senha === senhaDigitada &&
+    !s.usada &&
+    agora < s.exp
+  );
+
+  if(!senhaValida){
+    alert('Senha inválida, expirada ou já utilizada.');
+    return;
+  }
+
+  // marca como usada
+  senhaValida.usada = true;
+  localStorage.setItem('senhas_unicas', JSON.stringify(senhas));
+
+  // libera formulário
+  document.getElementById('alerta').style.display = 'none';
+  document.getElementById('formCard').classList.remove('locked');
+
+  alert('Formulário liberado com sucesso.');
+}
+
+// 📩 ENVIO
+function enviar(){
+  const voluntario = {
+    id: Date.now(),
+    nome: nome.value,
+    email: email.value,
+    idade: idade.value,
+    disponibilidade: tempo.value,
+    motivo: motivo.value,
+    status:'pendente',
+    data: new Date().toISOString()
+  };
+
+  if(!voluntario.nome || !voluntario.email || !voluntario.motivo){
+    alert('Preencha todos os campos.');
+    return;
+  }
+
+  const vols = JSON.parse(localStorage.getItem('voluntarios')) || [];
+  vols.push(voluntario);
+  localStorage.setItem('voluntarios', JSON.stringify(vols));
+
+  alert('Inscrição enviada com sucesso!');
+  location.href='obrigado.html';
+}
+</script>
+
+</body>
+</html>
