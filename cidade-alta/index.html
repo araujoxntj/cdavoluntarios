@@ -1,5 +1,3 @@
-Vamos começar do 0. Esse e meu codigo index.html. Faça tudo que eu pedi, porém separe por outros html para não ficar tudo junto. QUERO TUDO QUE PEDI
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -23,7 +21,7 @@ html, body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  pointer-events: none; /* 👈 ESSENCIAL */
+  pointer-events: none;
 }
 
 #video-bg video {
@@ -31,10 +29,8 @@ html, body {
   height: 100%;
   object-fit: cover;
   filter: brightness(0.35);
-  pointer-events: none; /* 👈 ESSENCIAL */
+  pointer-events: none;
 }
-
-
 
 .conteudo {
   position: absolute;
@@ -117,17 +113,14 @@ h1 {
 <!-- 🎥 Vídeo de fundo -->
 <div id="video-bg">
   <video autoplay loop muted playsinline preload="auto">
-    <source src="./video/cda2.mp4" type="video/mp4">
+    <source src="cda2.mp4" type="video/mp4">
   </video>
 </div>
 
-
 <!-- 🎵 Música -->
 <audio id="musica" loop autoplay muted>
-  <source src="./video/cda3.mp3" type="audio/mp3">
+  <source src="video/cda3.mp3" type="audio/mp3">
 </audio>
-
-
 
 <button id="btn-som">Ativar Som</button>
 
@@ -137,24 +130,23 @@ h1 {
   <h1>Cidade Alta • Moderação</h1>
 
   <div class="botoes">
-    <a href="./login.html" class="botao">Entrar</a>
-    <a href="./register.html" class="botao">Cadastrar</a>
+    <a href="login.html" class="botao">Entrar</a>
+    <a href="register.html" class="botao">Cadastrar</a>
   </div>
-</div> <!-- 👈 FECHAMENTO QUE FALTAVA -->
+</div>
 
 <script>
-  const btn = document.getElementById('btn-som');
-  const musica = document.getElementById('musica');
+const btn = document.getElementById('btn-som');
+const musica = document.getElementById('musica');
 
-  btn.onclick = () => {
-    musica.muted = false;
-    musica.play();
-    btn.textContent = 'Som ativado';
-    btn.disabled = true;
-    btn.style.opacity = '0.6';
-  };
+btn.onclick = () => {
+  musica.muted = false;
+  musica.play();
+  btn.textContent = 'Som ativado';
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+};
 </script>
 
 </body>
 </html>
-
